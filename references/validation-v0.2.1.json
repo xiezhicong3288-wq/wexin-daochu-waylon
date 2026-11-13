@@ -1,0 +1,1048 @@
+{
+  "schema_version": 1,
+  "adapter_version": "0.2.1",
+  "status": "windows_synthetic_validation_passed_real_material_pending",
+  "verified_at_utc": "2026-11-13T04:13:30.592063+00:00",
+  "recorded_at_utc": "2026-11-13T04:16:54.991902+00:00",
+  "authorization": {
+    "R1": "approved",
+    "R2": "approved",
+    "R3": "existing_authorization_inherited",
+    "scope": "existing one single chat plus one group pilot; neutral archive; stable IDs with display names",
+    "software_deployment_and_observed_compatibility_fixes": "within_existing_authorization",
+    "data_access_configuration": "original backup path outside observed Desktop Commander allowedDirectories; no bypass or whitelist change",
+    "account_and_exact_pilot_conversations": "not_yet_bound_to_verified_local_configuration"
+  },
+  "upstream": {
+    "repository": "https://github.com/mofan6/Moect",
+    "tag": "v1.2.8",
+    "commit": "88dffc7d0d06632f8061b0a19aa82b38337d7ee5",
+    "locked_files_verified": 64,
+    "upstream_source_or_lock_changed": false,
+    "core_dependencies_changed": false,
+    "runtime_requirements_sha256": "9524eac2a662c799a5950c0439555d8a854b0fe0a8f61eb2e9880b788fd8abf5",
+    "upstream_lock_sha256": "576e78e488e592a274e0509487e3519ec6df76b4ec0a4d621f6386bb940ae05c",
+    "windows_only_dependency_added": {
+      "package": "tzdata",
+      "version": "2026.6",
+      "marker": "sys_platform == \"win32\"",
+      "observed_reason": "two timezone tests failed without an IANA data source on Windows",
+      "wheel_sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec",
+      "installation": "isolated venv; pip --require-hashes --no-deps --only-binary=:all:; exit 0"
+    }
+  },
+  "windows_environment": {
+    "os": "Windows AMD64",
+    "desktop_commander": "0.3.1",
+    "powershell": "5.1.26100.9818",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4",
+    "python_setup": {
+      "started_utc": "2026-11-13T04:03:08.2354210Z",
+      "status": "ready",
+      "version": "3.13.17",
+      "source": "https://api.nuget.org/v3-flatcontainer/python/3.13.17/python.3.13.17.nupkg",
+      "global_path_changed": false,
+      "chat_data_accessed": false,
+      "catalog_source": "https://api.nuget.org/v3/catalog0/data/2026.10.21.16.02.39/python.3.13.17.json",
+      "package_sha256": "dce409744b088f94c6e37ba41f8100c384c27e029e843237364c602d30d475e5",
+      "package_sha512": "0e667928bb4f19573c6cd88f65133b2e07b243a5c716f335b56aa66bb9ec6f82328256d22c3a29e23a0276ac5c6a6d786211feab524890ad1e56629196c6b29c",
+      "package_bytes": 14826465,
+      "signatures": [
+        {
+          "subject": "CN=Python Software Foundation, O=Python Software Foundation, L=Beaverton, S=Oregon, C=US",
+          "status": "Valid",
+          "thumbprint": "BC3C0F36FC89EE2CAB2F6A91C724C8C0DB625032",
+          "file": "python.exe"
+        },
+        {
+          "subject": "CN=Python Software Foundation, O=Python Software Foundation, L=Beaverton, S=Oregon, C=US",
+          "status": "Valid",
+          "thumbprint": "BC3C0F36FC89EE2CAB2F6A91C724C8C0DB625032",
+          "file": "python313.dll"
+        }
+      ],
+      "finished_utc": "2026-11-13T04:03:21.2587098Z"
+    },
+    "private_runtime_ready": true,
+    "global_python_path_or_execution_policy_changed": false,
+    "native_imports": "passed",
+    "doctor": {
+      "exit_code": 0,
+      "receipt": {
+        "ok": true,
+        "command": "doctor",
+        "adapter_version": "0.2.1",
+        "upstream_commit": "88dffc7d0d06632f8061b0a19aa82b38337d7ee5",
+        "locked_files": 64,
+        "dependencies": {
+          "psutil": {
+            "present": true,
+            "version": "7.2.2",
+            "expected": "7.2.2",
+            "matches": true
+          },
+          "Cryptodome": {
+            "present": true,
+            "version": "3.24.1",
+            "expected": "3.24.1",
+            "matches": true
+          },
+          "zstandard": {
+            "present": true,
+            "version": "0.25.0",
+            "expected": "0.25.0",
+            "matches": true
+          },
+          "PIL": {
+            "present": true,
+            "version": "12.0.0",
+            "expected": "12.0.0",
+            "matches": true
+          },
+          "tzdata": {
+            "present": true,
+            "version": "2026.6",
+            "expected": "2026.6",
+            "matches": true
+          }
+        },
+        "windows_capture": "implemented_requires_real_device_acceptance",
+        "offline_export": "ready"
+      }
+    },
+    "process_path_change": "child-process PATH temporarily included the private Python DLL directory for native SQLite fixture loading only",
+    "private_task_directory_acl": "inheritance protected; current user, SYSTEM and Administrators; no other directory ACL modified"
+  },
+  "observed_failure_and_minimal_fixes": [
+    {
+      "issue": "Windows lstat/fstat ctime semantic mismatch caused stable WAL files to be rejected",
+      "evidence": "wal-stat-probe.json on Windows; 30 samples; 29 cross-API differences solely in st_ctime_ns; path and fd states each stable before/after",
+      "change": "Use birthtime for Windows cross-API comparison; preserve full ctime checks within the fd timeline and within the path timeline; retain dev, ino, size and mtime checks",
+      "files": [
+        "scripts/wal_guard.py",
+        "scripts/tests/test_wal_guard.py"
+      ],
+      "unchanged": "WAL checksum, salts, commit boundary, truncation and inventory/hash binding",
+      "regression": "10 metadata subcases including fd-only ctime change, path identity change, non-Windows mismatch and initial identity/time mismatches"
+    },
+    {
+      "issue": "Windows ZipInfo normalization could hide a literal backslash in an archive member name",
+      "change": "Validate orig_filename with the existing path rules and source prefix; require it to equal filename before extraction",
+      "files": [
+        "scripts/prepare_runtime.py",
+        "scripts/tests/test_prepare_runtime.py"
+      ],
+      "regression": "A preserved raw unsafe name and a simulated normalized path that otherwise matches a locked member are rejected with source_archive_path_refused"
+    },
+    {
+      "issue": "Windows lacked the IANA timezone data required by ZoneInfo checks",
+      "change": "Pin tzdata only on Windows and include it in doctor; preserve raw time values and existing conversion rules",
+      "files": [
+        "references/requirements-runtime.txt",
+        "scripts/moect_bridge.py"
+      ]
+    },
+    {
+      "issue": "SQLite fixture connections survived transaction context exit and blocked Windows temporary-file cleanup",
+      "change": "Explicitly close 21 connections in the database fixture modules while preserving commit/rollback context behavior; seven test modules updated overall. Only documented unsupported link conditions skip the affected cases.",
+      "regression": "Windows file-lock errors resolved; Linux test suite also passed with ResourceWarning treated as error",
+      "reparse_checks": "Separated from link privilege dependency and actually passed on Windows"
+    }
+  ],
+  "original_windows_attempt": {
+    "version": "0.2.0",
+    "status": "failed_synthetic",
+    "total": 157,
+    "failures": 7,
+    "errors": 71,
+    "skipped": 6,
+    "exit_code": 1,
+    "finished_utc": "2026-11-13T04:06:21.152277+00:00",
+    "preserved_receipts": [
+      "windows-validation.json",
+      "windows-tests.log",
+      "windows-doctor.stdout.json"
+    ],
+    "hash_caution": "The original receipt log_sha256 binds the captured stdout/stderr string before Windows newline translation, not the physical log file; the 0.2.1 runner hashes actual file bytes."
+  },
+  "linux_validation": {
+    "python": "3.12.14",
+    "sqlite": "3.53.1",
+    "total": 161,
+    "passed": 161,
+    "failed": 0,
+    "skipped": 0,
+    "seconds_in_unittest_log": 8.454,
+    "exit_code": 0,
+    "finished_utc": "2026-11-13T04:11:03.864535+00:00",
+    "command": [
+      "{linux_runtime}/venv/bin/python",
+      "-B",
+      "-W",
+      "error::ResourceWarning",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "{skill_directory}/scripts/tests",
+      "-v"
+    ],
+    "environment": {
+      "MOECT_TEST_UPSTREAM": "{linux_runtime}/source"
+    },
+    "log_sha256": "1ebebafa95318b7f72aaf9fd21a25a5d2860d9f8917a7da02948a5bc907b24b9",
+    "code_and_tests_unchanged": true
+  },
+  "windows_validation": {
+    "total": 161,
+    "passed": 149,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 12,
+    "exit_code": 0,
+    "started_utc": "2026-11-13T04:12:34.992296+00:00",
+    "finished_utc": "2026-11-13T04:13:30.592063+00:00",
+    "seconds_in_unittest_log": 52.892,
+    "subprocess_elapsed_seconds": 54.297092100001464,
+    "command": [
+      "{windows_task_root}\\runtime-0.2.0\\venv\\Scripts\\python.exe",
+      "-B",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "{windows_task_root}\\release-0.2.1\\skill\\scripts\\tests",
+      "-v"
+    ],
+    "environment": {
+      "MOECT_TEST_UPSTREAM": "{windows_task_root}\\runtime-0.2.0\\source",
+      "PYTHONUTF8": "1",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "log_file": "windows-tests-0.2.1.log",
+    "physical_log_sha256": "dc228f4d74c5bf4c770dba46e5db0277034d17721b3ac5443515b5d308f79a25",
+    "deployed_files_unchanged": true,
+    "skipped_cases": [
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_live_capture_cannot_run_on_cloud_linux",
+        "result": "skipped",
+        "reason": "This is the non-Windows fail-closed boundary"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_snapshot_link_is_rejected_before_copy",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_attachment_symlink_never_copies_external_bytes",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_input_symlink_is_rejected",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_output_link_ancestor_is_rejected",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_reject_symlink",
+        "result": "skipped",
+        "reason": "No symlink creation support"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_source_copy_rejects_linked_databases",
+        "result": "skipped",
+        "reason": "No symlink creation support"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_actual_cancel_keeps_original_and_marks_incomplete",
+        "result": "skipped",
+        "reason": "POSIX signal test; Windows cancellation needs device acceptance"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_existing_output_and_linked_output_parent_are_not_overwritten",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_symlink_input_and_attachment_are_rejected",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_linked_output_parent_rejected",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_link_fails_safely",
+        "result": "skipped",
+        "reason": "Windows symlink privilege unavailable (WinError 1314)"
+      }
+    ],
+    "skip_interpretation": {
+      "explicit_WinError_1314": 5,
+      "older_generic_symlink_unavailable": 5,
+      "non_Windows_boundary": 1,
+      "POSIX_cancel": 1,
+      "limitation": "Skipped cases are not Windows acceptance. Generic symlink messages do not independently prove WinError 1314; actual Windows cancellation and link behavior remain unverified."
+    },
+    "test_results": [
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_bad_later_database_wal_prevents_decrypting_earlier_database",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_invalid_wal_is_rejected_before_any_output_is_created",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_known_whole_page_loss_is_stopped_by_prior_inventory",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_missing_key_and_partial_database_page_fail_before_decryption",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_orphan_wal_and_nonempty_rollback_journal_are_not_ignored",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_real_decryptor_preserves_commits_and_excludes_uncommitted_tail",
+        "result": "passed"
+      },
+      {
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_wrong_key_is_sanitized_by_actual_page_hmac_failure",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_actual_core_selects_only_requested_conversation",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_forward_time_unit_is_not_guessed",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_frozen_snapshot_change_is_detected",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_live_capture_cannot_run_on_cloud_linux",
+        "result": "skipped",
+        "reason": "This is the non-Windows fail-closed boundary"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_live_capture_requires_explicit_flag_before_any_output",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_process_binding_rejects_wrong_user_and_unbound_directory",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_root_dependency_shadow_never_executes",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_snapshot_link_is_rejected_before_copy",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_attachment_symlink_never_copies_external_bytes",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_attachment_traversal_never_copies_external_bytes",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_bridge_declared_scope_conflict_rejects_records",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_bridge_gui_owner_conflict_fails_batch",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_chat_markup_is_escaped_and_never_executed",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_cli_error_does_not_echo_chat_body",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_csv_formula_labels_are_neutralized",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_duplicate_json_fields_fail_without_silent_replacement",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_duplicate_native_ids_are_retained_and_disclosed",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_equal_nicknames_do_not_merge_distinct_conversations",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_existing_output_is_rejected_without_overwrite",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_input_symlink_is_rejected",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_known_owner_conflict_is_not_merged_as_success",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_millisecond_like_timestamp_is_not_silently_divided",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_nested_timestamp_does_not_claim_native_origin",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_numeric_identifier_is_preserved_without_js_rounding",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_output_link_ancestor_is_rejected",
+        "result": "skipped",
+        "reason": "Windows symlink creation privilege is unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_oversize_json_rejected_before_source_copy",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_source_immutable_and_no_network_or_process",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_unknown_gui_owner_remains_unverified",
+        "result": "passed"
+      },
+      {
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_windows_reparse_attribute_is_rejected_without_is_junction",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_exception_output_does_not_repeat_sensitive_arguments",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_forward_millisecond_like_value_is_not_silently_rescaled",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_network_subprocess_and_outside_writes_really_blocked",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_original_forward_time_is_not_inferred_from_parent",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_overlap_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_process_binding_uses_real_process_user_and_open_database",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_reject_relative_parent_and_network_paths",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_reject_simulated_windows_reparse",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_reject_symlink",
+        "result": "skipped",
+        "reason": "No symlink creation support"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_source_copy_rejects_linked_databases",
+        "result": "skipped",
+        "reason": "No symlink creation support"
+      },
+      {
+        "case": "test_moect_bridge.Boundaries.test_unzoned_forward_text_remains_unzoned",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_actual_cancel_keeps_original_and_marks_incomplete",
+        "result": "skipped",
+        "reason": "POSIX signal test; Windows cancellation needs device acceptance"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_doctor_validates_source_and_real_dependencies",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_existing_output_unchanged",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_invalid_utf8_fails_without_silent_replacement",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_live_capture_requires_approval_and_windows_without_creating_output",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_missing_local_media_is_reported_without_network_or_key_cache",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_modified_source_and_unlocked_python_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_real_export_with_ctypes_crypto_backend_never_needs_a_subprocess",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_real_html_and_jsonl",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_real_json_preserves_text_ids_scope_provenance_and_missing_time",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_root_dependency_shadow_is_rejected_before_it_can_execute",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_sessions_keep_equal_names_separate",
+        "result": "passed"
+      },
+      {
+        "case": "test_moect_bridge.RealCore.test_unknown_session_fails_without_exporting_other_conversations",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_absent_timezone_does_not_infer_shanghai_or_raise_mismatch",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_attachment_copy_is_limited_to_referenced_bytes",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_bad_jsonl_records_are_counted_and_following_records_survive",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_bridge_account_identity_and_scope_are_preserved",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_bridge_nested_time_flags_and_provenance_remain_explicit",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_bridge_owner_conflicts_fail_without_cross_owner_merge",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_cli_label_cannot_override_declared_input_scope",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_cli_returns_machine_readable_result_and_safe_error",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_conflicting_known_owners_fail_entire_run_and_do_not_merge_messages",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_duplicate_and_large_ids_are_retained_without_rounding",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_empty_export_success_and_bad_schema_failure",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_existing_output_and_linked_output_parent_are_not_overwritten",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_explicit_shanghai_matching_time_has_no_issue",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_explicit_shanghai_time_mismatch_is_partial_without_repair",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_external_and_parent_attachment_paths_are_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_gui_preserves_original_bytes_text_and_source_locations",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_gui_scope_is_explicitly_caller_declared_and_unverified",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_html_and_csv_treat_commands_as_data",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_json_size_limit_is_checked_before_copying",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_jsonl_metadata_is_not_message_and_physical_lines_are_retained",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_legacy_schema_keeps_account_and_unknown_display_timezone",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_millisecond_and_missing_times_are_not_silently_converted",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_missing_encrypted_and_skipped_resources_are_distinct",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_names_do_not_merge_different_conversations_or_senders",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_nested_expansion_limit_is_reported_and_original_kept",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_nested_relationships_do_not_inflate_top_level_count",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_nested_unknown_time_origin_is_not_overclaimed",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_nonfinite_values_duplicate_keys_and_lone_surrogates_fail_safely",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_partial_valid_and_invalid_inputs_do_not_leak_body_into_errors",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_repeated_jsonl_metadata_is_rejected_not_counted_as_message",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_symlink_input_and_attachment_are_rejected",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_unavailable_timezone_rules_leave_consistency_unknown",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_unknown_type_is_preserved",
+        "result": "passed"
+      },
+      {
+        "case": "test_normalize_export.NormalizeTests.test_windows_reparse_flag_is_rejected_without_is_junction",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_case_collision",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_existing_output_is_not_replaced",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_failed_setup_keeps_checkpoint",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_linked_output_parent_rejected",
+        "result": "skipped",
+        "reason": "symlinks unavailable"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_missing_file",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_setup_does_not_run_program_or_install_dependencies",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_symlink_zip_entry",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_traversal_and_absolute_paths",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_verified_subset_and_original_unchanged",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_windows_zip_name_normalization_does_not_hide_unsafe_original",
+        "result": "passed"
+      },
+      {
+        "case": "test_prepare_runtime.PrepareTests.test_wrong_hash_writes_no_source",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_conflicting_sender_indicators_are_preserved_and_unresolved",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_duplicate_reference_ids_do_not_authenticate_first_match",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_equivalent_text_storage_preserves_exact_literal_and_source_rows",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_order_display_name_and_repeat_preserve_semantic_identity",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_quote_resolved_to_source_row_preserves_its_time_and_locator",
+        "result": "passed"
+      },
+      {
+        "case": "test_semantic_provenance.SemanticProvenance.test_quote_without_original_row_or_timestamp_stays_unknown",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_changed_and_extra_file_differences_are_separate",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_duplicate_ids_and_identical_values_need_distinct_physical_rows",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_embedded_counts_cannot_replace_missing_top_level_and_order_is_irrelevant",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_equal_total_cannot_hide_missing_and_extra_source_rows",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_cli_writes_report_preserves_inputs_and_refuses_overwrite",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_detects_omission_duplication_and_preserves_nested_counts",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_jsonl_node_locations_and_export_hash_binding",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_rejects_missing_invented_or_mutated_nested_nodes",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_rejects_wrong_root_and_cycles_even_with_existing_parents",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_final_hop_uses_actual_normalizer_and_detects_mutated_visible_fields",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_group_prefix_is_grounded_in_independent_name2id_rows",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_inclusive_time_window_retains_repeated_id_and_explains_exclusions",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_independent_discovery_finds_selected_table_in_other_named_database",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_known_missing_shard_is_rejected_before_row_accounting",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_local_msg_alias_points_to_raw_hash_table",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_manifest_supports_prior_plain_shape_and_explicit_schema",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_nullable_time_exclusion_is_not_invented_as_known_time",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_observed_manifest_does_not_claim_prior_inventory_verification",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_optional_absent_columns_are_explicit_null_and_required_missing_fails",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_projection_hash_without_physical_locator_cannot_pass",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_provenance_field_corruption_is_detected",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_rejected_row_needs_locator_and_reason_and_is_not_retained",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_saved_field_mutations_fail_even_when_source_locator_and_hash_match",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_sql_read_does_not_change_source_bytes",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_unavailable_interpretation_is_explicit_without_hiding_row_accounting",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_audit.SourceAudit.test_without_rowid_uses_ordered_declared_primary_key",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_clear_wal_is_read_from_processing_copy_without_mutating_preserved_input",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_decode_failure_accounts_for_unconfirmed_rows",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_equal_count_saved_field_mutation_is_not_a_pass",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_final_display_and_time_interpretation_mutations_are_detected",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_full_two_session_closure_and_changed_final_body",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_independent_discovery_exposes_unread_source_table",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_known_missing_shard_fails_before_copy",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_non_decode_build_failure_has_the_exact_source_position",
+        "result": "passed"
+      },
+      {
+        "case": "test_source_pipeline.SourcePipeline.test_unbound_inventory_and_time_exclusions_are_explicit",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_change_during_validation_fails_and_cancellation_propagates",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_corrupt_header_checksum_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_different_or_corrupt_payload_domain_cannot_fall_back",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_empty_and_header_only_have_no_observed_payload_domain",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_forged_uncommitted_commit_marker_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_genuine_uncommitted_tail_is_accounted_but_not_committed",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_known_whole_transaction_removal_needs_inventory",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_link_fails_safely",
+        "result": "skipped",
+        "reason": "Windows symlink privilege unavailable (WinError 1314)"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_missing_and_directory_fail_safely",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_native_committed_chain_and_read_only_input",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_page_size_version_and_magic_must_match_supported_format",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_partial_committed_transaction_is_not_complete",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_partial_header_rejected",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_salt_mismatch_not_skipped",
+        "result": "passed"
+      },
+      {
+        "case": "test_wal_guard.WalGuardTests.test_windows_stat_time_difference_and_real_changes",
+        "result": "passed"
+      }
+    ]
+  },
+  "tested_file_sha256": {
+    "scripts/moect_bridge.py": "9b1069c28d556227083b414918582f835dcab59c6577febdad787fbfe9b3fd57",
+    "scripts/normalize_export.py": "1b0d64e39278300838d69a701a3b09f7edc23efba2af6707260d26cbef2a295e",
+    "scripts/prepare_runtime.py": "c8add14843e5f4863d16fcc4a3a48eef144d03369c590e865d14b99c737fd748",
+    "scripts/source_audit.py": "4a1730aaf9527be5c3533be5fb92c64125aa3c37e4960cd5237b4c55cc504f1b",
+    "scripts/tests/test_capture_validation.py": "113b2208fd7bd6622dd9d6bb1f7d2de242eef552a2fb869b80c4cf5a2c34ada4",
+    "scripts/tests/test_independent_bridge.py": "d3291cdda53229fe86b3905f2866b88dd522809ae3119b0b154b12d0b39e3c52",
+    "scripts/tests/test_independent_normalize.py": "b627ea1d6db41e8a70aca6c1270586ca72da1cad341d0a06e9de788279e74dab",
+    "scripts/tests/test_moect_bridge.py": "795cbf0d7549286c93847c7be15cd399af40aaaaa228d20c5030c38787fe0c39",
+    "scripts/tests/test_normalize_export.py": "d77ad3ea1d083c6fc5262f888918cb55c8c9212e002270673ea9d472874ced0a",
+    "scripts/tests/test_prepare_runtime.py": "44a1566ddd7c779e0b0854379135eed6e20286b10ba66b31720e5da8f085ba02",
+    "scripts/tests/test_semantic_provenance.py": "960fc64011d028dfabc8569b06c427e16a4d501154808afd6824b105cf7cff80",
+    "scripts/tests/test_source_audit.py": "cff03cab16786dbc4f0738fe9c39d759f96c361bf8a670b4be924baf2dc07875",
+    "scripts/tests/test_source_pipeline.py": "465de5d60caf66de8d33626ea8af4a3500fb84b541138cd8557c8944a59e4d30",
+    "scripts/tests/test_wal_guard.py": "3195fb939e3fe85172cd9648246b838a50d112ea3f5bc784db5aef3aeed40961",
+    "scripts/wal_guard.py": "4a8780eacecda1312df3d0b1d48cc92c881857b7e154e823301b7aebf325513b"
+  },
+  "deployment_binding": {
+    "candidate_archive_sha256": "b868a0cbe6baed2a333e67595f05ccc831f1e4aed288132b7ddfa4012cdf5687",
+    "candidate_files": 27,
+    "candidate_manifest": "release-0.2.1/deployment-manifest.json",
+    "candidate_receipt": "deployment-receipt-0.2.1.json",
+    "description": "The candidate was verified before and after the Windows run. This validation record is written after testing; final deployed-file verification uses a separate final manifest and does not alter the original test binding."
+  },
+  "first_hand_references_read": [
+    {
+      "url": "https://docs.python.org/3.13/using/windows.html",
+      "version": "Python 3.13 online docs, accessed 2026-11-13",
+      "read_scope": "NuGet package and embedded distribution sections; side-by-side private environment guidance",
+      "used_for": "private interpreter preparation"
+    },
+    {
+      "url": "https://api.nuget.org/v3/catalog0/data/2026.10.21.16.02.39/python.3.13.17.json",
+      "version": "python 3.13.17 catalog record",
+      "read_scope": "id, version, packageHashAlgorithm and packageHash read by local setup script",
+      "used_for": "package hash verification before execution, plus local Authenticode checks"
+    },
+    {
+      "url": "https://docs.python.org/3/library/zoneinfo.html#data-sources",
+      "version": "online docs accessed 2026-11-13",
+      "read_scope": "Data sources and tzdata fallback",
+      "used_for": "Windows IANA dependency decision"
+    },
+    {
+      "url": "https://pypi.org/project/tzdata/",
+      "version": "tzdata 2026.6",
+      "read_scope": "release, Python Software Foundation ownership and wheel file hash",
+      "used_for": "pinned isolated Windows dependency"
+    },
+    {
+      "url": "https://github.com/python/cpython/issues/157671",
+      "version": "issue accessed 2026-11-13",
+      "read_scope": "reported Windows stat/fstat ctime discrepancy",
+      "used_for": "supporting explanation; the local controlled probe is the actual environment evidence"
+    }
+  ],
+  "acceptance_scope": {
+    "source_record_completeness": "synthetic source-to-export-to-archive checks passed; no real source inventory or pilot rows examined",
+    "capture_state": "controlled committed/uncommitted transaction and WAL failure cases passed; real database/WAL pairing and multi-database capture point not established",
+    "identity_content_time": "synthetic field, provenance, duplicate and timezone checks passed; real account binding, conversation selection and WeChat UI comparison pending",
+    "real_chat_keys_or_account_maps_accessed": false,
+    "real_attachment_recovery": "not_performed",
+    "real_pilot_programmatic_reconciliation": "not_performed",
+    "real_30_row_review": "not_performed",
+    "legal_or_standard_conformity_claim": false,
+    "standards_reference_scope": "Existing 0.2.0 references and applicability limits are unchanged; this Windows compatibility validation adds no standards conformity claim.",
+    "automatic_skill_routing": "not_verified",
+    "background_reconnect_or_monitoring": "not_started"
+  },
+  "resume_boundary": {
+    "remote_channel": "working for the observed commands; subscription tier not independently exposed by the API",
+    "next_step": "Resolve only the original backup directory access boundary, then inspect its format read-only before choosing any capture route",
+    "stop_if": [
+      "source outside configured allowedDirectories",
+      "account binding uncertain",
+      "exact single/group pilot not selected",
+      "source format incompatible or decryption unavailable",
+      "source inventory or database/WAL state unreliable"
+    ],
+    "no_new_capture_before": "verified account and exact one single-chat/one group scope on the authorized local device"
+  },
+  "publication_copy": {
+    "original_record_sha256": "2f67ed31afcb0a36ba5d867278bd808501fea76f2ffddd4a8936e7b99ac43bc4",
+    "redacted_fields": [
+      "linux_validation.command[0]",
+      "linux_validation.command[8]",
+      "linux_validation.environment.MOECT_TEST_UPSTREAM"
+    ],
+    "note": "Distribution copy: execution-environment paths replaced with explicit placeholders; original versions, results, code hashes and log hashes retained.",
+    "published_skill_name": "wexin-daochu-waylon",
+    "runtime_code_changed": false
+  }
+}

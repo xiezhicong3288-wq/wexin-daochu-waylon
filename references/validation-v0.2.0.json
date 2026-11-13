@@ -1,0 +1,1434 @@
+{
+  "schema_version": 1,
+  "adapter_version": "0.2.0",
+  "status": "synthetic_validation_passed_real_device_pending",
+  "verified_at_utc": "2026-11-13T03:40:43.401464+00:00",
+  "authorization": {
+    "R1": "approved",
+    "R2": "approved",
+    "R3": "existing_authorization_inherited",
+    "scope": "existing one single chat plus one group pilot; neutral local archive; stable IDs with display names",
+    "new_approval_required": false
+  },
+  "upstream": {
+    "repository": "https://github.com/mofan6/Moect",
+    "tag": "v1.2.8",
+    "commit": "88dffc7d0d06632f8061b0a19aa82b38337d7ee5",
+    "locked_files_verified": 64,
+    "source_files_changed": false,
+    "lock_and_dependencies_changed": false,
+    "upstream_lock_sha256": "576e78e488e592a274e0509487e3519ec6df76b4ec0a4d621f6386bb940ae05c",
+    "runtime_requirements_sha256": "e8d413d2e63bf7039f1997acb0b97c8c6dc62ea907b5be55610d3c936ecf860f"
+  },
+  "environment": {
+    "host": "isolated Linux engineering environment",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_sqlite": "3.53.1",
+    "dependencies": {
+      "psutil": "7.2.2",
+      "pycryptodomex": "3.24.1",
+      "zstandard": "0.25.0",
+      "Pillow": "12.0.0"
+    },
+    "native_sqlite_fixture_writer": "3.46.1; used only for controlled WAL transaction fixtures",
+    "real_chat_data_used": false,
+    "real_keys_or_account_mappings_used": false,
+    "windows_live_capture": "not_performed",
+    "automatic_skill_routing": "not_verified"
+  },
+  "unit_and_integration_tests": {
+    "total": 157,
+    "passed": 157,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 8.782842517000972,
+    "existing_baseline_tests_unchanged_and_reused": 96,
+    "added_tests": 61,
+    "modules": {
+      "original_baseline": 96,
+      "source_audit": 26,
+      "wal_guard": 13,
+      "capture_validation": 7,
+      "semantic_provenance": 6,
+      "source_pipeline": 9
+    },
+    "actual_command": [
+      "{linux_runtime}/venv/bin/python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "{skill_directory}/scripts/tests",
+      "-v"
+    ],
+    "actual_environment": {
+      "MOECT_TEST_UPSTREAM": "{linux_runtime}/source"
+    },
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-13T03:40:43.401464+00:00",
+    "source_and_tests_unchanged_during_run": true,
+    "raw_log_sha256": "fb1fe6f1ba18dd9cad9c5c6a93275d55208c6657205521a5336ee60b70ddb960",
+    "raw_log_summary": "Ran 157 tests in 8.467s\n\nOK",
+    "test_results": [
+      {
+        "test": "test_bad_later_database_wal_prevents_decrypting_earlier_database",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_bad_later_database_wal_prevents_decrypting_earlier_database",
+        "result": "ok"
+      },
+      {
+        "test": "test_invalid_wal_is_rejected_before_any_output_is_created",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_invalid_wal_is_rejected_before_any_output_is_created",
+        "result": "ok"
+      },
+      {
+        "test": "test_known_whole_page_loss_is_stopped_by_prior_inventory",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_known_whole_page_loss_is_stopped_by_prior_inventory",
+        "result": "ok"
+      },
+      {
+        "test": "test_missing_key_and_partial_database_page_fail_before_decryption",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_missing_key_and_partial_database_page_fail_before_decryption",
+        "result": "ok"
+      },
+      {
+        "test": "test_orphan_wal_and_nonempty_rollback_journal_are_not_ignored",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_orphan_wal_and_nonempty_rollback_journal_are_not_ignored",
+        "result": "ok"
+      },
+      {
+        "test": "test_real_decryptor_preserves_commits_and_excludes_uncommitted_tail",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_real_decryptor_preserves_commits_and_excludes_uncommitted_tail",
+        "result": "ok"
+      },
+      {
+        "test": "test_wrong_key_is_sanitized_by_actual_page_hmac_failure",
+        "case": "test_capture_validation.FrozenCaptureValidationTests.test_wrong_key_is_sanitized_by_actual_page_hmac_failure",
+        "result": "ok"
+      },
+      {
+        "test": "test_actual_core_selects_only_requested_conversation",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_actual_core_selects_only_requested_conversation",
+        "result": "ok"
+      },
+      {
+        "test": "test_forward_time_unit_is_not_guessed",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_forward_time_unit_is_not_guessed",
+        "result": "ok"
+      },
+      {
+        "test": "test_frozen_snapshot_change_is_detected",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_frozen_snapshot_change_is_detected",
+        "result": "ok"
+      },
+      {
+        "test": "test_live_capture_cannot_run_on_cloud_linux",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_live_capture_cannot_run_on_cloud_linux",
+        "result": "ok"
+      },
+      {
+        "test": "test_live_capture_requires_explicit_flag_before_any_output",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_live_capture_requires_explicit_flag_before_any_output",
+        "result": "ok"
+      },
+      {
+        "test": "test_process_binding_rejects_wrong_user_and_unbound_directory",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_process_binding_rejects_wrong_user_and_unbound_directory",
+        "result": "ok"
+      },
+      {
+        "test": "test_root_dependency_shadow_never_executes",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_root_dependency_shadow_never_executes",
+        "result": "ok"
+      },
+      {
+        "test": "test_snapshot_link_is_rejected_before_copy",
+        "case": "test_independent_bridge.IndependentBridgeChecks.test_snapshot_link_is_rejected_before_copy",
+        "result": "ok"
+      },
+      {
+        "test": "test_attachment_symlink_never_copies_external_bytes",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_attachment_symlink_never_copies_external_bytes",
+        "result": "ok"
+      },
+      {
+        "test": "test_attachment_traversal_never_copies_external_bytes",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_attachment_traversal_never_copies_external_bytes",
+        "result": "ok"
+      },
+      {
+        "test": "test_bridge_declared_scope_conflict_rejects_records",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_bridge_declared_scope_conflict_rejects_records",
+        "result": "ok"
+      },
+      {
+        "test": "test_bridge_gui_owner_conflict_fails_batch",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_bridge_gui_owner_conflict_fails_batch",
+        "result": "ok"
+      },
+      {
+        "test": "test_chat_markup_is_escaped_and_never_executed",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_chat_markup_is_escaped_and_never_executed",
+        "result": "ok"
+      },
+      {
+        "test": "test_cli_error_does_not_echo_chat_body",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_cli_error_does_not_echo_chat_body",
+        "result": "ok"
+      },
+      {
+        "test": "test_csv_formula_labels_are_neutralized",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_csv_formula_labels_are_neutralized",
+        "result": "ok"
+      },
+      {
+        "test": "test_duplicate_json_fields_fail_without_silent_replacement",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_duplicate_json_fields_fail_without_silent_replacement",
+        "result": "ok"
+      },
+      {
+        "test": "test_duplicate_native_ids_are_retained_and_disclosed",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_duplicate_native_ids_are_retained_and_disclosed",
+        "result": "ok"
+      },
+      {
+        "test": "test_equal_nicknames_do_not_merge_distinct_conversations",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_equal_nicknames_do_not_merge_distinct_conversations",
+        "result": "ok"
+      },
+      {
+        "test": "test_existing_output_is_rejected_without_overwrite",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_existing_output_is_rejected_without_overwrite",
+        "result": "ok"
+      },
+      {
+        "test": "test_input_symlink_is_rejected",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_input_symlink_is_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_known_owner_conflict_is_not_merged_as_success",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_known_owner_conflict_is_not_merged_as_success",
+        "result": "ok"
+      },
+      {
+        "test": "test_millisecond_like_timestamp_is_not_silently_divided",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_millisecond_like_timestamp_is_not_silently_divided",
+        "result": "ok"
+      },
+      {
+        "test": "test_nested_timestamp_does_not_claim_native_origin",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_nested_timestamp_does_not_claim_native_origin",
+        "result": "ok"
+      },
+      {
+        "test": "test_numeric_identifier_is_preserved_without_js_rounding",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_numeric_identifier_is_preserved_without_js_rounding",
+        "result": "ok"
+      },
+      {
+        "test": "test_output_link_ancestor_is_rejected",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_output_link_ancestor_is_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_oversize_json_rejected_before_source_copy",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_oversize_json_rejected_before_source_copy",
+        "result": "ok"
+      },
+      {
+        "test": "test_source_immutable_and_no_network_or_process",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_source_immutable_and_no_network_or_process",
+        "result": "ok"
+      },
+      {
+        "test": "test_unknown_gui_owner_remains_unverified",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_unknown_gui_owner_remains_unverified",
+        "result": "ok"
+      },
+      {
+        "test": "test_windows_reparse_attribute_is_rejected_without_is_junction",
+        "case": "test_independent_normalize.IndependentNormalizeChecks.test_windows_reparse_attribute_is_rejected_without_is_junction",
+        "result": "ok"
+      },
+      {
+        "test": "test_exception_output_does_not_repeat_sensitive_arguments",
+        "case": "test_moect_bridge.Boundaries.test_exception_output_does_not_repeat_sensitive_arguments",
+        "result": "ok"
+      },
+      {
+        "test": "test_forward_millisecond_like_value_is_not_silently_rescaled",
+        "case": "test_moect_bridge.Boundaries.test_forward_millisecond_like_value_is_not_silently_rescaled",
+        "result": "ok"
+      },
+      {
+        "test": "test_network_subprocess_and_outside_writes_really_blocked",
+        "case": "test_moect_bridge.Boundaries.test_network_subprocess_and_outside_writes_really_blocked",
+        "result": "ok"
+      },
+      {
+        "test": "test_original_forward_time_is_not_inferred_from_parent",
+        "case": "test_moect_bridge.Boundaries.test_original_forward_time_is_not_inferred_from_parent",
+        "result": "ok"
+      },
+      {
+        "test": "test_overlap_rejected",
+        "case": "test_moect_bridge.Boundaries.test_overlap_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_process_binding_uses_real_process_user_and_open_database",
+        "case": "test_moect_bridge.Boundaries.test_process_binding_uses_real_process_user_and_open_database",
+        "result": "ok"
+      },
+      {
+        "test": "test_reject_relative_parent_and_network_paths",
+        "case": "test_moect_bridge.Boundaries.test_reject_relative_parent_and_network_paths",
+        "result": "ok"
+      },
+      {
+        "test": "test_reject_symlink_and_simulated_windows_reparse",
+        "case": "test_moect_bridge.Boundaries.test_reject_symlink_and_simulated_windows_reparse",
+        "result": "ok"
+      },
+      {
+        "test": "test_source_copy_rejects_linked_databases",
+        "case": "test_moect_bridge.Boundaries.test_source_copy_rejects_linked_databases",
+        "result": "ok"
+      },
+      {
+        "test": "test_unzoned_forward_text_remains_unzoned",
+        "case": "test_moect_bridge.Boundaries.test_unzoned_forward_text_remains_unzoned",
+        "result": "ok"
+      },
+      {
+        "test": "test_actual_cancel_keeps_original_and_marks_incomplete",
+        "case": "test_moect_bridge.RealCore.test_actual_cancel_keeps_original_and_marks_incomplete",
+        "result": "ok"
+      },
+      {
+        "test": "test_doctor_validates_source_and_real_dependencies",
+        "case": "test_moect_bridge.RealCore.test_doctor_validates_source_and_real_dependencies",
+        "result": "ok"
+      },
+      {
+        "test": "test_existing_output_unchanged",
+        "case": "test_moect_bridge.RealCore.test_existing_output_unchanged",
+        "result": "ok"
+      },
+      {
+        "test": "test_invalid_utf8_fails_without_silent_replacement",
+        "case": "test_moect_bridge.RealCore.test_invalid_utf8_fails_without_silent_replacement",
+        "result": "ok"
+      },
+      {
+        "test": "test_live_capture_requires_approval_and_windows_without_creating_output",
+        "case": "test_moect_bridge.RealCore.test_live_capture_requires_approval_and_windows_without_creating_output",
+        "result": "ok"
+      },
+      {
+        "test": "test_missing_local_media_is_reported_without_network_or_key_cache",
+        "case": "test_moect_bridge.RealCore.test_missing_local_media_is_reported_without_network_or_key_cache",
+        "result": "ok"
+      },
+      {
+        "test": "test_modified_source_and_unlocked_python_rejected",
+        "case": "test_moect_bridge.RealCore.test_modified_source_and_unlocked_python_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_real_export_with_ctypes_crypto_backend_never_needs_a_subprocess",
+        "case": "test_moect_bridge.RealCore.test_real_export_with_ctypes_crypto_backend_never_needs_a_subprocess",
+        "result": "ok"
+      },
+      {
+        "test": "test_real_html_and_jsonl",
+        "case": "test_moect_bridge.RealCore.test_real_html_and_jsonl",
+        "result": "ok"
+      },
+      {
+        "test": "test_real_json_preserves_text_ids_scope_provenance_and_missing_time",
+        "case": "test_moect_bridge.RealCore.test_real_json_preserves_text_ids_scope_provenance_and_missing_time",
+        "result": "ok"
+      },
+      {
+        "test": "test_root_dependency_shadow_is_rejected_before_it_can_execute",
+        "case": "test_moect_bridge.RealCore.test_root_dependency_shadow_is_rejected_before_it_can_execute",
+        "result": "ok"
+      },
+      {
+        "test": "test_sessions_keep_equal_names_separate",
+        "case": "test_moect_bridge.RealCore.test_sessions_keep_equal_names_separate",
+        "result": "ok"
+      },
+      {
+        "test": "test_unknown_session_fails_without_exporting_other_conversations",
+        "case": "test_moect_bridge.RealCore.test_unknown_session_fails_without_exporting_other_conversations",
+        "result": "ok"
+      },
+      {
+        "test": "test_absent_timezone_does_not_infer_shanghai_or_raise_mismatch",
+        "case": "test_normalize_export.NormalizeTests.test_absent_timezone_does_not_infer_shanghai_or_raise_mismatch",
+        "result": "ok"
+      },
+      {
+        "test": "test_attachment_copy_is_limited_to_referenced_bytes",
+        "case": "test_normalize_export.NormalizeTests.test_attachment_copy_is_limited_to_referenced_bytes",
+        "result": "ok"
+      },
+      {
+        "test": "test_bad_jsonl_records_are_counted_and_following_records_survive",
+        "case": "test_normalize_export.NormalizeTests.test_bad_jsonl_records_are_counted_and_following_records_survive",
+        "result": "ok"
+      },
+      {
+        "test": "test_bridge_account_identity_and_scope_are_preserved",
+        "case": "test_normalize_export.NormalizeTests.test_bridge_account_identity_and_scope_are_preserved",
+        "result": "ok"
+      },
+      {
+        "test": "test_bridge_nested_time_flags_and_provenance_remain_explicit",
+        "case": "test_normalize_export.NormalizeTests.test_bridge_nested_time_flags_and_provenance_remain_explicit",
+        "result": "ok"
+      },
+      {
+        "test": "test_bridge_owner_conflicts_fail_without_cross_owner_merge",
+        "case": "test_normalize_export.NormalizeTests.test_bridge_owner_conflicts_fail_without_cross_owner_merge",
+        "result": "ok"
+      },
+      {
+        "test": "test_cli_label_cannot_override_declared_input_scope",
+        "case": "test_normalize_export.NormalizeTests.test_cli_label_cannot_override_declared_input_scope",
+        "result": "ok"
+      },
+      {
+        "test": "test_cli_returns_machine_readable_result_and_safe_error",
+        "case": "test_normalize_export.NormalizeTests.test_cli_returns_machine_readable_result_and_safe_error",
+        "result": "ok"
+      },
+      {
+        "test": "test_conflicting_known_owners_fail_entire_run_and_do_not_merge_messages",
+        "case": "test_normalize_export.NormalizeTests.test_conflicting_known_owners_fail_entire_run_and_do_not_merge_messages",
+        "result": "ok"
+      },
+      {
+        "test": "test_duplicate_and_large_ids_are_retained_without_rounding",
+        "case": "test_normalize_export.NormalizeTests.test_duplicate_and_large_ids_are_retained_without_rounding",
+        "result": "ok"
+      },
+      {
+        "test": "test_empty_export_success_and_bad_schema_failure",
+        "case": "test_normalize_export.NormalizeTests.test_empty_export_success_and_bad_schema_failure",
+        "result": "ok"
+      },
+      {
+        "test": "test_existing_output_and_linked_output_parent_are_not_overwritten",
+        "case": "test_normalize_export.NormalizeTests.test_existing_output_and_linked_output_parent_are_not_overwritten",
+        "result": "ok"
+      },
+      {
+        "test": "test_explicit_shanghai_matching_time_has_no_issue",
+        "case": "test_normalize_export.NormalizeTests.test_explicit_shanghai_matching_time_has_no_issue",
+        "result": "ok"
+      },
+      {
+        "test": "test_explicit_shanghai_time_mismatch_is_partial_without_repair",
+        "case": "test_normalize_export.NormalizeTests.test_explicit_shanghai_time_mismatch_is_partial_without_repair",
+        "result": "ok"
+      },
+      {
+        "test": "test_external_and_parent_attachment_paths_are_rejected",
+        "case": "test_normalize_export.NormalizeTests.test_external_and_parent_attachment_paths_are_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_gui_preserves_original_bytes_text_and_source_locations",
+        "case": "test_normalize_export.NormalizeTests.test_gui_preserves_original_bytes_text_and_source_locations",
+        "result": "ok"
+      },
+      {
+        "test": "test_gui_scope_is_explicitly_caller_declared_and_unverified",
+        "case": "test_normalize_export.NormalizeTests.test_gui_scope_is_explicitly_caller_declared_and_unverified",
+        "result": "ok"
+      },
+      {
+        "test": "test_html_and_csv_treat_commands_as_data",
+        "case": "test_normalize_export.NormalizeTests.test_html_and_csv_treat_commands_as_data",
+        "result": "ok"
+      },
+      {
+        "test": "test_json_size_limit_is_checked_before_copying",
+        "case": "test_normalize_export.NormalizeTests.test_json_size_limit_is_checked_before_copying",
+        "result": "ok"
+      },
+      {
+        "test": "test_jsonl_metadata_is_not_message_and_physical_lines_are_retained",
+        "case": "test_normalize_export.NormalizeTests.test_jsonl_metadata_is_not_message_and_physical_lines_are_retained",
+        "result": "ok"
+      },
+      {
+        "test": "test_legacy_schema_keeps_account_and_unknown_display_timezone",
+        "case": "test_normalize_export.NormalizeTests.test_legacy_schema_keeps_account_and_unknown_display_timezone",
+        "result": "ok"
+      },
+      {
+        "test": "test_millisecond_and_missing_times_are_not_silently_converted",
+        "case": "test_normalize_export.NormalizeTests.test_millisecond_and_missing_times_are_not_silently_converted",
+        "result": "ok"
+      },
+      {
+        "test": "test_missing_encrypted_and_skipped_resources_are_distinct",
+        "case": "test_normalize_export.NormalizeTests.test_missing_encrypted_and_skipped_resources_are_distinct",
+        "result": "ok"
+      },
+      {
+        "test": "test_names_do_not_merge_different_conversations_or_senders",
+        "case": "test_normalize_export.NormalizeTests.test_names_do_not_merge_different_conversations_or_senders",
+        "result": "ok"
+      },
+      {
+        "test": "test_nested_expansion_limit_is_reported_and_original_kept",
+        "case": "test_normalize_export.NormalizeTests.test_nested_expansion_limit_is_reported_and_original_kept",
+        "result": "ok"
+      },
+      {
+        "test": "test_nested_relationships_do_not_inflate_top_level_count",
+        "case": "test_normalize_export.NormalizeTests.test_nested_relationships_do_not_inflate_top_level_count",
+        "result": "ok"
+      },
+      {
+        "test": "test_nested_unknown_time_origin_is_not_overclaimed",
+        "case": "test_normalize_export.NormalizeTests.test_nested_unknown_time_origin_is_not_overclaimed",
+        "result": "ok"
+      },
+      {
+        "test": "test_nonfinite_values_duplicate_keys_and_lone_surrogates_fail_safely",
+        "case": "test_normalize_export.NormalizeTests.test_nonfinite_values_duplicate_keys_and_lone_surrogates_fail_safely",
+        "result": "ok"
+      },
+      {
+        "test": "test_partial_valid_and_invalid_inputs_do_not_leak_body_into_errors",
+        "case": "test_normalize_export.NormalizeTests.test_partial_valid_and_invalid_inputs_do_not_leak_body_into_errors",
+        "result": "ok"
+      },
+      {
+        "test": "test_repeated_jsonl_metadata_is_rejected_not_counted_as_message",
+        "case": "test_normalize_export.NormalizeTests.test_repeated_jsonl_metadata_is_rejected_not_counted_as_message",
+        "result": "ok"
+      },
+      {
+        "test": "test_symlink_input_and_attachment_are_rejected",
+        "case": "test_normalize_export.NormalizeTests.test_symlink_input_and_attachment_are_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_unavailable_timezone_rules_leave_consistency_unknown",
+        "case": "test_normalize_export.NormalizeTests.test_unavailable_timezone_rules_leave_consistency_unknown",
+        "result": "ok"
+      },
+      {
+        "test": "test_unknown_type_is_preserved",
+        "case": "test_normalize_export.NormalizeTests.test_unknown_type_is_preserved",
+        "result": "ok"
+      },
+      {
+        "test": "test_windows_reparse_flag_is_rejected_without_is_junction",
+        "case": "test_normalize_export.NormalizeTests.test_windows_reparse_flag_is_rejected_without_is_junction",
+        "result": "ok"
+      },
+      {
+        "test": "test_case_collision",
+        "case": "test_prepare_runtime.PrepareTests.test_case_collision",
+        "result": "ok"
+      },
+      {
+        "test": "test_existing_output_is_not_replaced",
+        "case": "test_prepare_runtime.PrepareTests.test_existing_output_is_not_replaced",
+        "result": "ok"
+      },
+      {
+        "test": "test_failed_setup_keeps_checkpoint",
+        "case": "test_prepare_runtime.PrepareTests.test_failed_setup_keeps_checkpoint",
+        "result": "ok"
+      },
+      {
+        "test": "test_linked_output_parent_rejected",
+        "case": "test_prepare_runtime.PrepareTests.test_linked_output_parent_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_missing_file",
+        "case": "test_prepare_runtime.PrepareTests.test_missing_file",
+        "result": "ok"
+      },
+      {
+        "test": "test_setup_does_not_run_program_or_install_dependencies",
+        "case": "test_prepare_runtime.PrepareTests.test_setup_does_not_run_program_or_install_dependencies",
+        "result": "ok"
+      },
+      {
+        "test": "test_symlink_zip_entry",
+        "case": "test_prepare_runtime.PrepareTests.test_symlink_zip_entry",
+        "result": "ok"
+      },
+      {
+        "test": "test_traversal_and_absolute_paths",
+        "case": "test_prepare_runtime.PrepareTests.test_traversal_and_absolute_paths",
+        "result": "ok"
+      },
+      {
+        "test": "test_verified_subset_and_original_unchanged",
+        "case": "test_prepare_runtime.PrepareTests.test_verified_subset_and_original_unchanged",
+        "result": "ok"
+      },
+      {
+        "test": "test_wrong_hash_writes_no_source",
+        "case": "test_prepare_runtime.PrepareTests.test_wrong_hash_writes_no_source",
+        "result": "ok"
+      },
+      {
+        "test": "test_conflicting_sender_indicators_are_preserved_and_unresolved",
+        "case": "test_semantic_provenance.SemanticProvenance.test_conflicting_sender_indicators_are_preserved_and_unresolved",
+        "result": "ok"
+      },
+      {
+        "test": "test_duplicate_reference_ids_do_not_authenticate_first_match",
+        "case": "test_semantic_provenance.SemanticProvenance.test_duplicate_reference_ids_do_not_authenticate_first_match",
+        "result": "ok"
+      },
+      {
+        "test": "test_equivalent_text_storage_preserves_exact_literal_and_source_rows",
+        "case": "test_semantic_provenance.SemanticProvenance.test_equivalent_text_storage_preserves_exact_literal_and_source_rows",
+        "result": "ok"
+      },
+      {
+        "test": "test_order_display_name_and_repeat_preserve_semantic_identity",
+        "case": "test_semantic_provenance.SemanticProvenance.test_order_display_name_and_repeat_preserve_semantic_identity",
+        "result": "ok"
+      },
+      {
+        "test": "test_quote_resolved_to_source_row_preserves_its_time_and_locator",
+        "case": "test_semantic_provenance.SemanticProvenance.test_quote_resolved_to_source_row_preserves_its_time_and_locator",
+        "result": "ok"
+      },
+      {
+        "test": "test_quote_without_original_row_or_timestamp_stays_unknown",
+        "case": "test_semantic_provenance.SemanticProvenance.test_quote_without_original_row_or_timestamp_stays_unknown",
+        "result": "ok"
+      },
+      {
+        "test": "test_changed_and_extra_file_differences_are_separate",
+        "case": "test_source_audit.SourceAudit.test_changed_and_extra_file_differences_are_separate",
+        "result": "ok"
+      },
+      {
+        "test": "test_duplicate_ids_and_identical_values_need_distinct_physical_rows",
+        "case": "test_source_audit.SourceAudit.test_duplicate_ids_and_identical_values_need_distinct_physical_rows",
+        "result": "ok"
+      },
+      {
+        "test": "test_embedded_counts_cannot_replace_missing_top_level_and_order_is_irrelevant",
+        "case": "test_source_audit.SourceAudit.test_embedded_counts_cannot_replace_missing_top_level_and_order_is_irrelevant",
+        "result": "ok"
+      },
+      {
+        "test": "test_equal_total_cannot_hide_missing_and_extra_source_rows",
+        "case": "test_source_audit.SourceAudit.test_equal_total_cannot_hide_missing_and_extra_source_rows",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_cli_writes_report_preserves_inputs_and_refuses_overwrite",
+        "case": "test_source_audit.SourceAudit.test_final_hop_cli_writes_report_preserves_inputs_and_refuses_overwrite",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_detects_omission_duplication_and_preserves_nested_counts",
+        "case": "test_source_audit.SourceAudit.test_final_hop_detects_omission_duplication_and_preserves_nested_counts",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_jsonl_node_locations_and_export_hash_binding",
+        "case": "test_source_audit.SourceAudit.test_final_hop_jsonl_node_locations_and_export_hash_binding",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_rejects_missing_invented_or_mutated_nested_nodes",
+        "case": "test_source_audit.SourceAudit.test_final_hop_rejects_missing_invented_or_mutated_nested_nodes",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_rejects_wrong_root_and_cycles_even_with_existing_parents",
+        "case": "test_source_audit.SourceAudit.test_final_hop_rejects_wrong_root_and_cycles_even_with_existing_parents",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_hop_uses_actual_normalizer_and_detects_mutated_visible_fields",
+        "case": "test_source_audit.SourceAudit.test_final_hop_uses_actual_normalizer_and_detects_mutated_visible_fields",
+        "result": "ok"
+      },
+      {
+        "test": "test_group_prefix_is_grounded_in_independent_name2id_rows",
+        "case": "test_source_audit.SourceAudit.test_group_prefix_is_grounded_in_independent_name2id_rows",
+        "result": "ok"
+      },
+      {
+        "test": "test_inclusive_time_window_retains_repeated_id_and_explains_exclusions",
+        "case": "test_source_audit.SourceAudit.test_inclusive_time_window_retains_repeated_id_and_explains_exclusions",
+        "result": "ok"
+      },
+      {
+        "test": "test_independent_discovery_finds_selected_table_in_other_named_database",
+        "case": "test_source_audit.SourceAudit.test_independent_discovery_finds_selected_table_in_other_named_database",
+        "result": "ok"
+      },
+      {
+        "test": "test_known_missing_shard_is_rejected_before_row_accounting",
+        "case": "test_source_audit.SourceAudit.test_known_missing_shard_is_rejected_before_row_accounting",
+        "result": "ok"
+      },
+      {
+        "test": "test_local_msg_alias_points_to_raw_hash_table",
+        "case": "test_source_audit.SourceAudit.test_local_msg_alias_points_to_raw_hash_table",
+        "result": "ok"
+      },
+      {
+        "test": "test_manifest_supports_prior_plain_shape_and_explicit_schema",
+        "case": "test_source_audit.SourceAudit.test_manifest_supports_prior_plain_shape_and_explicit_schema",
+        "result": "ok"
+      },
+      {
+        "test": "test_nullable_time_exclusion_is_not_invented_as_known_time",
+        "case": "test_source_audit.SourceAudit.test_nullable_time_exclusion_is_not_invented_as_known_time",
+        "result": "ok"
+      },
+      {
+        "test": "test_observed_manifest_does_not_claim_prior_inventory_verification",
+        "case": "test_source_audit.SourceAudit.test_observed_manifest_does_not_claim_prior_inventory_verification",
+        "result": "ok"
+      },
+      {
+        "test": "test_optional_absent_columns_are_explicit_null_and_required_missing_fails",
+        "case": "test_source_audit.SourceAudit.test_optional_absent_columns_are_explicit_null_and_required_missing_fails",
+        "result": "ok"
+      },
+      {
+        "test": "test_projection_hash_without_physical_locator_cannot_pass",
+        "case": "test_source_audit.SourceAudit.test_projection_hash_without_physical_locator_cannot_pass",
+        "result": "ok"
+      },
+      {
+        "test": "test_provenance_field_corruption_is_detected",
+        "case": "test_source_audit.SourceAudit.test_provenance_field_corruption_is_detected",
+        "result": "ok"
+      },
+      {
+        "test": "test_rejected_row_needs_locator_and_reason_and_is_not_retained",
+        "case": "test_source_audit.SourceAudit.test_rejected_row_needs_locator_and_reason_and_is_not_retained",
+        "result": "ok"
+      },
+      {
+        "test": "test_saved_field_mutations_fail_even_when_source_locator_and_hash_match",
+        "case": "test_source_audit.SourceAudit.test_saved_field_mutations_fail_even_when_source_locator_and_hash_match",
+        "result": "ok"
+      },
+      {
+        "test": "test_sql_read_does_not_change_source_bytes",
+        "case": "test_source_audit.SourceAudit.test_sql_read_does_not_change_source_bytes",
+        "result": "ok"
+      },
+      {
+        "test": "test_unavailable_interpretation_is_explicit_without_hiding_row_accounting",
+        "case": "test_source_audit.SourceAudit.test_unavailable_interpretation_is_explicit_without_hiding_row_accounting",
+        "result": "ok"
+      },
+      {
+        "test": "test_without_rowid_uses_ordered_declared_primary_key",
+        "case": "test_source_audit.SourceAudit.test_without_rowid_uses_ordered_declared_primary_key",
+        "result": "ok"
+      },
+      {
+        "test": "test_clear_wal_is_read_from_processing_copy_without_mutating_preserved_input",
+        "case": "test_source_pipeline.SourcePipeline.test_clear_wal_is_read_from_processing_copy_without_mutating_preserved_input",
+        "result": "ok"
+      },
+      {
+        "test": "test_decode_failure_accounts_for_unconfirmed_rows",
+        "case": "test_source_pipeline.SourcePipeline.test_decode_failure_accounts_for_unconfirmed_rows",
+        "result": "ok"
+      },
+      {
+        "test": "test_equal_count_saved_field_mutation_is_not_a_pass",
+        "case": "test_source_pipeline.SourcePipeline.test_equal_count_saved_field_mutation_is_not_a_pass",
+        "result": "ok"
+      },
+      {
+        "test": "test_final_display_and_time_interpretation_mutations_are_detected",
+        "case": "test_source_pipeline.SourcePipeline.test_final_display_and_time_interpretation_mutations_are_detected",
+        "result": "ok"
+      },
+      {
+        "test": "test_full_two_session_closure_and_changed_final_body",
+        "case": "test_source_pipeline.SourcePipeline.test_full_two_session_closure_and_changed_final_body",
+        "result": "ok"
+      },
+      {
+        "test": "test_independent_discovery_exposes_unread_source_table",
+        "case": "test_source_pipeline.SourcePipeline.test_independent_discovery_exposes_unread_source_table",
+        "result": "ok"
+      },
+      {
+        "test": "test_known_missing_shard_fails_before_copy",
+        "case": "test_source_pipeline.SourcePipeline.test_known_missing_shard_fails_before_copy",
+        "result": "ok"
+      },
+      {
+        "test": "test_non_decode_build_failure_has_the_exact_source_position",
+        "case": "test_source_pipeline.SourcePipeline.test_non_decode_build_failure_has_the_exact_source_position",
+        "result": "ok"
+      },
+      {
+        "test": "test_unbound_inventory_and_time_exclusions_are_explicit",
+        "case": "test_source_pipeline.SourcePipeline.test_unbound_inventory_and_time_exclusions_are_explicit",
+        "result": "ok"
+      },
+      {
+        "test": "test_change_during_validation_fails_and_cancellation_propagates",
+        "case": "test_wal_guard.WalGuardTests.test_change_during_validation_fails_and_cancellation_propagates",
+        "result": "ok"
+      },
+      {
+        "test": "test_corrupt_header_checksum_rejected",
+        "case": "test_wal_guard.WalGuardTests.test_corrupt_header_checksum_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_different_or_corrupt_payload_domain_cannot_fall_back",
+        "case": "test_wal_guard.WalGuardTests.test_different_or_corrupt_payload_domain_cannot_fall_back",
+        "result": "ok"
+      },
+      {
+        "test": "test_empty_and_header_only_have_no_observed_payload_domain",
+        "case": "test_wal_guard.WalGuardTests.test_empty_and_header_only_have_no_observed_payload_domain",
+        "result": "ok"
+      },
+      {
+        "test": "test_forged_uncommitted_commit_marker_rejected",
+        "case": "test_wal_guard.WalGuardTests.test_forged_uncommitted_commit_marker_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_genuine_uncommitted_tail_is_accounted_but_not_committed",
+        "case": "test_wal_guard.WalGuardTests.test_genuine_uncommitted_tail_is_accounted_but_not_committed",
+        "result": "ok"
+      },
+      {
+        "test": "test_known_whole_transaction_removal_needs_inventory",
+        "case": "test_wal_guard.WalGuardTests.test_known_whole_transaction_removal_needs_inventory",
+        "result": "ok"
+      },
+      {
+        "test": "test_missing_link_and_directory_fail_safely",
+        "case": "test_wal_guard.WalGuardTests.test_missing_link_and_directory_fail_safely",
+        "result": "ok"
+      },
+      {
+        "test": "test_native_committed_chain_and_read_only_input",
+        "case": "test_wal_guard.WalGuardTests.test_native_committed_chain_and_read_only_input",
+        "result": "ok"
+      },
+      {
+        "test": "test_page_size_version_and_magic_must_match_supported_format",
+        "case": "test_wal_guard.WalGuardTests.test_page_size_version_and_magic_must_match_supported_format",
+        "result": "ok"
+      },
+      {
+        "test": "test_partial_committed_transaction_is_not_complete",
+        "case": "test_wal_guard.WalGuardTests.test_partial_committed_transaction_is_not_complete",
+        "result": "ok"
+      },
+      {
+        "test": "test_partial_header_rejected",
+        "case": "test_wal_guard.WalGuardTests.test_partial_header_rejected",
+        "result": "ok"
+      },
+      {
+        "test": "test_salt_mismatch_not_skipped",
+        "case": "test_wal_guard.WalGuardTests.test_salt_mismatch_not_skipped",
+        "result": "ok"
+      }
+    ]
+  },
+  "independence": {
+    "source_reference": "Independent SQLite SELECT across supplied databases for selected session tables; never uses Moect enumeration or message-build functions. Physical rowid/declared primary key, nine raw fields, occurrence counts and explicit time exclusions retained.",
+    "saved_export_reconciliation": "Reads persisted exports, not exporter return counts. Saved exports are bound by their hashes before final organizer verification.",
+    "final_export_closure": "Independently enumerates JSON/JSONL top-level, quote and forward payload nodes, verifies copied export hashes, retained source fields, final display labels, time interpretation and exact parent/root relationships.",
+    "independent_review": "Fresh reviewers were read-only against production; two demonstrated counterexamples were fixed and rerun using the unchanged reproducer.",
+    "qualification": "Independent comparison logic is not an independent implementation of every complex Moect renderer; those semantics require actual source/context review."
+  },
+  "requirements_and_results": {
+    "R1": {
+      "result": "passed_for_tested_inventory_and_schema",
+      "checks": [
+        "missing known shard fails before full-success export",
+        "identical projections and repeated IDs keep separate physical occurrences",
+        "equal totals cannot hide missing/extra/changed rows",
+        "unread matching table in differently named database is detected",
+        "time exclusions and located rejections separated",
+        "fixed export hash and exact nested relationships close the final hop",
+        "changed final names and time interpretation labels fail"
+      ],
+      "history_beyond_fixed_inventory": "not_proven"
+    },
+    "R2": {
+      "result": "passed_for_native_sqlite_and_controlled_encrypted_envelopes",
+      "checks": [
+        "native committed and uncommitted transactions",
+        "header and rolling frame checksum, salt and partial-frame faults rejected",
+        "forged commit marker rejected",
+        "known whole-file/page omission rejected by prior inventory",
+        "actual unchanged upstream decrypt_file consumes the same validated frozen bytes",
+        "wrong key rejected using actual first-page HMAC check",
+        "preserved raw files separate from SQLite processing copy"
+      ],
+      "checksum_domain": "observed_stored_payload_bytes",
+      "limits": [
+        "real WeChat encrypted WAL writer compatibility untested",
+        "stale-generation salt tail conservatively rejected",
+        "all-page encrypted HMAC authentication not established",
+        "database-WAL cryptographic pair identity not established",
+        "same cross-database instant not established",
+        "valid whole-frame truncation without prior inventory cannot reveal prior history"
+      ]
+    },
+    "R3": {
+      "result": "passed_for_tested_text_sender_and_quote_cases",
+      "checks": [
+        "TEXT, UTF-8 BLOB, ZSTD and whitespace-only bodies preserve exact decoded content",
+        "large IDs and numeric zero retained",
+        "mapping/prefix conflict records evidence and leaves sender unknown",
+        "ambiguous quote match never selects the first candidate",
+        "missing nested time does not borrow parent time",
+        "unproven embedded quote does not acquire a false database locator",
+        "body decode or message-build failure includes exact physical source location and stage",
+        "input order, display-name changes and repeated execution preserve stable attribution and content"
+      ],
+      "historical_identity": "not_authenticated"
+    }
+  },
+  "fresh_context_skill_invocation": {
+    "explicit_skill_selection": true,
+    "actual_execution": true,
+    "automatic_routing": "not_verified",
+    "original_receipt": {
+      "schema_version": 1,
+      "finished_utc": "2026-11-13T03:37:52.363259+00:00",
+      "finished_beijing": "2026-11-13T11:37:52.363259+08:00",
+      "overall_status": "partial",
+      "execution_finished": true,
+      "delivered": true,
+      "user_acceptance": "not_performed",
+      "input_classification": "authorized_synthetic_frozen_sqlite",
+      "host": "Linux x86_64",
+      "live_wechat_or_remote_access": "not_performed",
+      "scope": {
+        "account_declaration": "fixture_owner",
+        "account_scope": "synthetic-pilot",
+        "conversation_count": 2,
+        "time_filter": null
+      },
+      "stages": {
+        "doctor": {
+          "status": "success",
+          "exit_code": 0,
+          "locked_files_verified": 64,
+          "dependencies_matched": 4
+        },
+        "export": {
+          "status": "partial",
+          "exit_code": 1
+        },
+        "normalize": {
+          "status": "partial",
+          "exit_code": 1
+        },
+        "source_audit": {
+          "status": "passed",
+          "exit_code": 0,
+          "three_hop_verified": true
+        },
+        "delivery_verification": {
+          "status": "passed",
+          "exit_code": 0,
+          "checks_passed": 21,
+          "checks_total": 21
+        }
+      },
+      "counts": {
+        "input_databases": 4,
+        "conversations": 2,
+        "single_chat_top_level": 4,
+        "group_chat_top_level": 2,
+        "source_top_level": 6,
+        "exported_top_level": 6,
+        "normalized_top_level": 6,
+        "embedded_quotes": 1,
+        "embedded_forward_items": 0,
+        "normalized_total_records": 7,
+        "rejected": 0,
+        "time_excluded": 0,
+        "fixed_export_files_verified": 2,
+        "export_nodes_matched": 7,
+        "attachment_references": 0,
+        "copied_attachments": 0,
+        "warnings": 1,
+        "notes": 1,
+        "failures": 0
+      },
+      "issues": [
+        {
+          "code": "quoted_source_ambiguous",
+          "severity": "warning",
+          "count": 1,
+          "candidate_count": 2,
+          "resolution": "Preserved embedded quote; source row and event time remain unknown."
+        },
+        {
+          "code": "duplicate_exported_server_id_retained",
+          "severity": "note",
+          "count": 1,
+          "resolution": "Both physical source rows retained; no deduplication."
+        }
+      ],
+      "preservation": {
+        "input_file_hash_size_mtime_unchanged": true,
+        "current_input_matches_prior_manifest": true,
+        "private_source_exact_hash_and_size": true,
+        "prior_manifest_unchanged": true
+      },
+      "limits": {
+        "real_identity_or_authenticity": "not_verified_synthetic_fixture",
+        "original_quote_source": "unknown_ambiguous",
+        "original_quote_time": "unknown",
+        "cross_database_common_time": "unknown",
+        "historical_completeness": "only_predeclared_supplied_inventory_verified",
+        "windows_real_device_capture": "not_performed",
+        "attachments": "zero_references_not_media_recovery_validation",
+        "complex_rendering": "export_to_archive_fidelity_verified_not_general_semantic_authentication"
+      },
+      "evidence_files": [
+        "input-before.json",
+        "input-after.json",
+        "export/source-manifest.json",
+        "export/source-reference.json",
+        "export/source-audit.json",
+        "export/run.json",
+        "archive/manifest.json",
+        "archive/source-reconciliation.json",
+        "receipts/verify-delivery.stdout.txt",
+        "delivery-manifest.json",
+        "COMMANDS.txt",
+        "commands.jsonl",
+        "independent-review.json"
+      ],
+      "next_action": "No automatic further action. Preserve partial status. A new task with new source evidence is needed to resolve ambiguity.",
+      "user_action_required": false,
+      "executor": "/root/moect_upgrade_forward_use",
+      "independent_review": {
+        "status": "passed",
+        "checks_passed": 30,
+        "checks_total": 30,
+        "file": "independent-review.json",
+        "checked_beijing": "2026-11-13T11:36:54.593374+08:00"
+      }
+    },
+    "independent_full_review": {
+      "schema_version": 1,
+      "reviewer": "/root/moect_upgrade_forward_use/independent_archive_check",
+      "checked_utc": "2026-11-13T03:36:54.593374Z",
+      "checked_beijing": "2026-11-13T11:36:54.593374+08:00",
+      "method": "Read-only independent SQL, hashes, JSON payload and HTML/CSV inspection; did not import or reuse source_audit comparison functions. No files written by reviewer.",
+      "status": "passed",
+      "checks_passed": 30,
+      "checks_total": 30,
+      "failed_checks": 0,
+      "overall_delivery_status": "partial",
+      "coverage": {
+        "input_databases": 4,
+        "source_physical_rows": 6,
+        "raw_sql_fields_per_row": 9,
+        "raw_sql_field_values": 54,
+        "top_level_records": 6,
+        "embedded_quote_records": 1,
+        "export_originals": 2,
+        "conversations": 2,
+        "ordinary_text_records": 5,
+        "large_integer_top_level_ids": 4,
+        "duplicate_projection_groups": 1,
+        "duplicate_extra_rows_retained": 1,
+        "group_sender_prefix_checks": 2,
+        "html_articles": 7,
+        "attachment_references": 0,
+        "locked_upstream_files": 64,
+        "sqlite_integrity_checks": 4
+      },
+      "findings": {
+        "input_and_private_copies_hashes": "4/4 matched; input hash/size/mtime unchanged; private-source/private-snapshot matched",
+        "source_rows": "6 physical rows and 54 raw field values matched independent reference",
+        "saved_export_fidelity": "7/7 nodes source_fields, parent and root relationships matched",
+        "ordinary_text": "5/5 exact; whitespace/newlines preserved",
+        "identifiers": "4 large integer IDs exact; duplicate physical source row retained",
+        "sender": "2 group prefixes agree with source sender mappings; current contact display names not authenticated historical identities",
+        "quote": "1 embedded quote has 2 candidates; original source/time unknown and no invented database row",
+        "rendering": "7 HTML article contents correspond; 2 CSV conversation counts agree",
+        "stages": "doctor/export/normalize/source-audit exits 0/1/1/0 match receipts",
+        "failure": "none observed",
+        "sqlite_structure": "4/4 frozen databases returned integrity_check = ok using read-only immutable connections."
+      },
+      "limits": [
+        "All inputs authorized synthetic fixtures; no real identity or authenticity certification.",
+        "One ambiguous quote keeps entire delivery partial.",
+        "Zero referenced attachments does not validate media recovery.",
+        "Common multi-database time, history outside supplied inventory and Windows live capture remain unverified.",
+        "The current fixture has no WAL sidecars or pure-whitespace messages; those boundaries were not exercised here."
+      ],
+      "evidence_origin": "Reviewer tool execution and returned findings in this task; no copied message bodies or identities."
+    },
+    "final_code_recheck": {
+      "status": "passed",
+      "three_hop_verified": true,
+      "counts": {
+        "source_in_scope": 6,
+        "source_time_excluded": 0,
+        "exported_top_level": 6,
+        "rejected_top_level": 0,
+        "embedded_quotes": 1,
+        "embedded_forward_items": 0,
+        "normalized_top_level": 6
+      },
+      "export_payload_closure": {
+        "status": "passed",
+        "issues": [],
+        "expected_export_files": 2,
+        "verified_export_files": 2,
+        "expected_nodes": 7,
+        "matched_nodes": 7,
+        "limit": "Organizer fidelity to saved export bytes; not independent validation of complex Moect rendering."
+      },
+      "input_hashes": {
+        "source_reference_sha256": "7847e736976b7b1fec5ae9972f75fe47e8bb528bbb093f30e694a10478440f93",
+        "normalized_messages_sha256": "cf5c31bd9a075d4992e375a362ed073d80a5a91fa02b93c0e53aa3a771ffe44b"
+      }
+    },
+    "overall_result": "partial as required: ambiguous quote remains unknown despite complete row accounting; no actual attachment references in this fixture"
+  },
+  "independent_counterexample_recheck": {
+    "checked_at_beijing": "2026-11-13T11:40:36.654507+08:00",
+    "status": "both_original_findings_verified_fixed",
+    "baseline_cli": {
+      "returncode": 0,
+      "receipt": {
+        "ok": true,
+        "status": "passed",
+        "counts": {
+          "source_in_scope": 2,
+          "source_time_excluded": 0,
+          "exported_top_level": 2,
+          "rejected_top_level": 0,
+          "embedded_quotes": 2,
+          "embedded_forward_items": 1,
+          "normalized_top_level": 2
+        }
+      },
+      "stderr": ""
+    },
+    "original_mutation_checks": {
+      "sender_display_name": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "sender_display_name"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "failed"
+      },
+      "conversation_display_name": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "conversation_display_name"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "failed"
+      },
+      "time.basis": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "time"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "failed"
+      },
+      "time.source_display_timezone": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "time"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "failed"
+      },
+      "time.display_consistency": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "time"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "failed"
+      },
+      "content": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_fields_mismatch",
+            "fields": [
+              "content"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ],
+        "closure_status": "passed"
+      }
+    },
+    "mapping_label_checks": {
+      "kind": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "kind"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      },
+      "shard": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "shard"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      },
+      "id_basis": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "id_basis"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      },
+      "sender_group_basis": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "sender_group_basis"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      },
+      "account_binding": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "account_binding"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      },
+      "input_scope_basis": {
+        "passed": false,
+        "three_hop_verified": false,
+        "issues": [
+          {
+            "code": "normalized_export_payload_mismatch",
+            "fields": [
+              "input_scope_basis"
+            ],
+            "normalized_line": 1,
+            "record_id": "record-000000001"
+          }
+        ]
+      }
+    },
+    "failure_locates_physical_row_2": {
+      "stage": "message_build",
+      "source": {
+        "database": "message_0.db",
+        "database_sha256": "213ca651dc1849545dacfdffa3891b4d762e7eeba686d24231ca7d3250e374c5",
+        "table": "Msg_29bdb6eff9cf81b5f17044f2d59bc9f0",
+        "local_id": 1,
+        "source_rowid": 2,
+        "row_sha256": "0e217f062fd3c2d172c7a29b1d789d8ebef9bb972cc52390848d52e18d4c2f95"
+      },
+      "embedded_without_source_row": false,
+      "exception_type": "TypeError"
+    },
+    "input_unchanged": true,
+    "source_hashes": {
+      "moect_bridge.py": "b674c935a47f5f9ea08148fd3554a1672af276d3453c42439d257e341fe128b5",
+      "source_audit.py": "4a1730aaf9527be5c3533be5fb92c64125aa3c37e4960cd5237b4c55cc504f1b",
+      "wal_guard.py": "ff51e92db3f450b256eefb44abf26654a4ad1cbb85b559e2f985bd853882d7f0",
+      "normalize_export.py": "c3c202433092e41c900916afef6818fd65d576dcb01ccd4f8a02b3514e724609"
+    },
+    "source_hashes_unchanged_during_recheck": true,
+    "reproducer_unchanged_from_before_review": true,
+    "boundary": "Only original two findings and newly mapped label fields; no production, upstream or real-data edits; no Windows or remote-control operations."
+  },
+  "standards_read_scope": [
+    {
+      "id": "S1",
+      "name": "ISO/IEC 27037:2012",
+      "url": "https://www.iso.org/standard/44381.html",
+      "read_scope": "Official public abstract and publication metadata; not full standard text.",
+      "application": "来源清单、获取范围、原件与工作副本、处理记录；不据此宣称标准符合性。"
+    },
+    {
+      "id": "S2",
+      "name": "ISO/IEC 27041:2015",
+      "url": "https://www.iso.org/standard/44405.html",
+      "read_scope": "Official public abstract and publication metadata; not full standard text.",
+      "application": "需求、最小验证、明确阈值与适用边界；不据此宣称标准符合性。"
+    },
+    {
+      "id": "S3",
+      "name": "NIST CFTT Methodology Overview",
+      "url": "https://www.nist.gov/itl/csd/secure-systems-and-applications/computer-forensics-tool-testing-program-cftt/cftt-general-0",
+      "read_scope": "Official functionality-driven methodology and specification/test-process overview; no independent edition identifier used.",
+      "application": "功能要求、断言、用例、测试环境和结果报告。未获得NIST认证。"
+    },
+    {
+      "id": "S4",
+      "name": "SQLite Database File Format / WAL",
+      "url": "https://www.sqlite.org/fileformat.html#the_write_ahead_log",
+      "read_scope": "Sections 4.1 WAL file format, 4.2 checksum algorithm, 4.5 reader algorithm; SQLite WAL persistent-state and integrity-check documentation.",
+      "application": "校验头部、帧盐值、累计校验和与可信提交边界。真实微信加密写入格式仍须确认。"
+    }
+  ],
+  "compliance_claim": "No ISO/IEC conformance, NIST certification, real identity, legal conclusion or all-history completeness is asserted.",
+  "implementation_and_test_sha256": {
+    "scripts/moect_bridge.py": "b674c935a47f5f9ea08148fd3554a1672af276d3453c42439d257e341fe128b5",
+    "scripts/normalize_export.py": "c3c202433092e41c900916afef6818fd65d576dcb01ccd4f8a02b3514e724609",
+    "scripts/prepare_runtime.py": "75aaea86380a3117b4effc740f8dd9259ff36cb8b4a09250b9e3d3989ce12d01",
+    "scripts/source_audit.py": "4a1730aaf9527be5c3533be5fb92c64125aa3c37e4960cd5237b4c55cc504f1b",
+    "scripts/tests/test_capture_validation.py": "113b2208fd7bd6622dd9d6bb1f7d2de242eef552a2fb869b80c4cf5a2c34ada4",
+    "scripts/tests/test_independent_bridge.py": "d07ef0e925f03004601af3537f1cf30e9cbaf34aca1ca94f3d29109e78b55998",
+    "scripts/tests/test_independent_normalize.py": "9ebf242b0fd7edeb70ec8b1365bf03ea74036c20307a16e3b48a897d5864cf24",
+    "scripts/tests/test_moect_bridge.py": "d79ee6aedb08611e82356b0c0006810c34ccb651828b152af99bc7da454e22b4",
+    "scripts/tests/test_normalize_export.py": "d77ad3ea1d083c6fc5262f888918cb55c8c9212e002270673ea9d472874ced0a",
+    "scripts/tests/test_prepare_runtime.py": "8eba3ae13bed15ade1f6dbd3d15953b8d97e803a89e1a04ea85e685394861a2f",
+    "scripts/tests/test_semantic_provenance.py": "88deef95dec73743648112279b753828161c087aa45129c3595b7c65c36afc38",
+    "scripts/tests/test_source_audit.py": "5a698245eebaa9dca11d3ab14fd122401eb3e510919d42ee6dc4989138d0d336",
+    "scripts/tests/test_source_pipeline.py": "7758f98161507a9d0270fe22f90759c384adc6670ed541398d36e28f72042599",
+    "scripts/tests/test_wal_guard.py": "49234eff55ec2afc273d575086f35be0a8af15f66c288841923747330d2203da",
+    "scripts/wal_guard.py": "ff51e92db3f450b256eefb44abf26654a4ad1cbb85b559e2f985bd853882d7f0"
+  },
+  "evidence_receipt_sha256": {
+    "final_test_receipt": "48c8403825355f46132661b88685988f1dc5cc6fcf798dee29bde7c3bf7c2ff8",
+    "doctor": "960db857e86734046cf5f1622075da959ce4044d0fd00dcaa294b3e1a048376d",
+    "fresh_context_receipt": "031e376282d9d1ec164d81d3fa0fadecbb653513d7fdfe696388b563507a1ea1",
+    "fresh_context_independent_full_review": "5141de428271f1715f72091ecb790225caaeb09d34e7fac73dee4a4c7c5bfa04",
+    "fresh_context_final_code_recheck": "4e1efc161a7b0a384e12c2f176e767974701e1b92333f07699f94ad156fb7ab1",
+    "read_only_counterexample_recheck": "b1eaf7890205fd057428584a31f451d27c24afce7b2a65553e3839d01f71891f"
+  },
+  "pending_real_device_acceptance": [
+    "Confirm permitted channel restoration and current Windows scene before any resumed operation; do not retry or bypass the existing channel restriction.",
+    "Check actual deployed adapter/runtime, approved account and session IDs, bound process identity, local private-directory ACL and prior receipts.",
+    "Verify original format, acquisition inventory and frozen DB/WAL association; key read/decryption and actual writer compatibility remain untested.",
+    "Run full source/export/normalized reconciliation for the existing single-chat and group scope; inspect at least 30 actual messages or all if fewer, covering present types and attachments.",
+    "Record original-WeChat context comparisons on the authorized device and user acceptance separately."
+  ],
+  "checkpoint": {
+    "engineering": "implementation and synthetic validation complete",
+    "real_device": "paused_at_existing_remote_channel_restriction",
+    "channel_restoration": "unknown_not_probed",
+    "resume_owner": "primary assistant in a subsequent user-active turn after permitted channel restoration is established",
+    "background_work_or_reminders_scheduled": false,
+    "keys_chats_mappings_upload": "not_performed",
+    "stop_conditions": [
+      "unreliable key source or frozen acquisition",
+      "unsupported encrypted WAL checksum domain or source format",
+      "unexplained source/export/archive difference",
+      "unresolved remote permission or quota restriction"
+    ]
+  },
+  "publication_copy": {
+    "original_record_sha256": "5ddd7fd3fe85902c7e4a703a395bb09c727877108e1bd6d1eabe74391737eff9",
+    "redacted_fields": [
+      "unit_and_integration_tests.actual_command[0]",
+      "unit_and_integration_tests.actual_command[6]",
+      "unit_and_integration_tests.actual_environment.MOECT_TEST_UPSTREAM"
+    ],
+    "note": "Distribution copy: execution-environment paths replaced with explicit placeholders; original versions, results, code hashes and log hashes retained.",
+    "published_skill_name": "wexin-daochu-waylon",
+    "runtime_code_changed": false
+  }
+}

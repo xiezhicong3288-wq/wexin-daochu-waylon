@@ -1,0 +1,6 @@
+# Pinned minimum dependencies for the source adapter; no desktop GUI or updater.
+psutil==7.2.2
+pycryptodomex==3.24.1
+zstandard==0.25.0
+Pillow==12.0.0
+tzdata==2026.6; sys_platform == "win32"
