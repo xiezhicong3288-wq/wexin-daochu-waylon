@@ -18,10 +18,10 @@ https://github.com/xiezhicong3288-wq/wexin-daochu-waylon
 ```
 
 ```text
-python scripts/normalize_export.py --input <Moect导出JSON或JSONL> --account-scope <已确认范围> --out <全新目录>
+python "<技能目录>\scripts\normalize_export.py" --input <Moect导出JSON或JSONL> --account-scope <已确认范围> --out <全新目录>
 ```
 
-命令与参数见 [执行命令](references/commands.md)。验收判据、条款级追溯矩阵、外部锚定契约与失效条件见 [验收要求](references/acceptance.md)；按矩阵逐项核对回执，不以生成文件或退出码代替。只有导出文件、没有原始数据库时，结论限于整理保真。
+命令与参数见 [执行命令](references/commands.md)。验收判据、条款级追溯矩阵、外部锚定契约与失效条件见 [验收要求](references/acceptance.md)；按矩阵逐项核对回执，不以生成文件或退出码代替。只有导出文件、没有原始数据库时，结论限于整理保真；此路径产物不含 `source-manifest.json`／`private-snapshot`，验收要求 §五 的独立复算命令集只适用于 `moect_bridge.py` 的会话产物目录。
 
 ## 运行环境
 
