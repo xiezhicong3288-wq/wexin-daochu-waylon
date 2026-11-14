@@ -50,10 +50,10 @@
 | G4 WAL 与提交边界 | 提取段 | `wal_invalid_or_unsupported` | `test_invalid_wal_is_rejected_before_any_output_is_created`、`test_known_whole_page_loss_is_stopped_by_prior_inventory` | `run.json.database_validation` |
 | G5 身份与分组 | 整理段 | `identity_verified=false`、`conflicting_exported_account_ids` | `test_conflicting_known_owners_fail_entire_run_and_do_not_merge_messages`、`test_process_binding_rejects_wrong_user_and_unbound_directory` | `run.json`、`messages.jsonl` |
 | G6 时间与三段对账 | 整理段 | `source_reconciliation_failed`、`exported_time_fields_mismatch` | `test_equal_total_cannot_hide_missing_and_extra_source_rows`、`test_saved_field_mutations_fail_even_when_source_locator_and_hash_match` | `source-reference.json`、`source-audit.json` |
-| G7 附件与注入防护 | 整理段 | `invalid_attachment_path`、`linked_path_rejected` | `test_attachment_traversal_never_copies_external_bytes`、`test_chat_markup_is_escaped_and_never_executed` | `attachment_index.jsonl`、`issues.jsonl` |
+| G7 附件与注入防护 | 整理段 | `invalid_attachment_path`、`linked_path_rejected`、`attachment_reported_incomplete`／`message_resources_incomplete_or_skipped`（状态须在 `archive.html` 可见） | `test_attachment_traversal_never_copies_external_bytes`、`test_chat_markup_is_escaped_and_never_executed`、`test_html_discloses_upstream_resource_status_even_when_bytes_copied` | `attachment_index.jsonl`、`issues.jsonl`、`archive.html` |
 | G8 失败与恢复 | 验收段 | `partial/1`、`failed/2` | `test_existing_output_unchanged`、`test_actual_cancel_keeps_original_and_marks_incomplete` | `manifest.json`、`run.json` |
 
-**一致性检查（机器可判）**：把 SKILL.md 每条「必须／不得／不能」映射到 G1–G8 与 §一矩阵；任一禁令无对应断言编号即 `unmapped_invariant` 失败。其余必测边界并入各组：固定源码逐文件相符、输入输出不重叠且不覆盖、原生 ID 精度、原时间／时区／展示分离、附件逃逸与 reparse、HTML 转义与 CSV 公式防护、重复键与非有限数拒绝、网络／子进程／密钥限制、输出冲突与恢复对账；相同数量但丢一条加一条、改正文或解释标签不能通过。SQLite `fileformat` WAL §4.1／4.2／4.5 用作字节级设计与追溯框架；不作符合性或认证声称，出处见 §六。
+**一致性检查（机器可判）**：把 SKILL.md 每条「必须／不得／不能」映射到 G1–G8 与 §一矩阵；任一禁令无对应断言编号即 `unmapped_invariant` 失败。其余必测边界并入各组：固定源码逐文件相符、输入输出不重叠且不覆盖、原生 ID 精度、原时间／时区／展示分离、附件逃逸与 reparse、HTML 转义与 CSV 公式防护、附件／消息媒体状态在 `archive.html` 可见、重复键与非有限数拒绝、网络／子进程／密钥限制、输出冲突与恢复对账；相同数量但丢一条加一条、改正文或解释标签不能通过。SQLite `fileformat` WAL §4.1／4.2／4.5 用作字节级设计与追溯框架；不作符合性或认证声称，出处见 §六。
 
 ## 五、独立复算与可证伪集
 

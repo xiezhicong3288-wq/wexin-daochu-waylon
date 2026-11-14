@@ -218,6 +218,33 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(attachment["verification"], "missing")
         self.assertEqual(self.rows()[0]["source_fields"]["resource_status"], "skipped")
 
+    def test_html_discloses_upstream_resource_status_even_when_bytes_copied(self):
+        (self.inputs / "media").mkdir()
+        encrypted = self.inputs / "media/encrypted.dat"
+        encrypted.write_bytes(b"synthetic encrypted bytes")
+        available = self.inputs / "media/available.wav"
+        available.write_bytes(b"synthetic available bytes")
+        messages = [
+            message(resource_status="encrypted",
+                    resources=[dict(path="media/encrypted.dat", status="encrypted", kind="image")]),
+            message(server_id="90071992547409931235", local_id=8,
+                    resources=[dict(path="media/available.wav", status="available", kind="voice")]),
+            message(server_id="90071992547409931236", local_id=9, resource_status="missing"),
+            message(server_id="90071992547409931237", local_id=10,
+                    resource_status='<script>alert("x")</script>'),
+        ]
+        result = self.run_export([self.write(document(messages))])
+        rendered = (self.out / "archive.html").read_text(encoding="utf-8")
+        self.assertEqual(result["status"], "partial")
+        self.assertIn("上游状态：encrypted", rendered)
+        self.assertIn("媒体状态：missing", rendered)
+        self.assertEqual(rendered.count("上游状态："), 1)
+        self.assertNotIn("<script>", rendered)
+        self.assertIn("&lt;script&gt;", rendered)
+        self.assertEqual(result["counts"]["copied_attachments"], 2)
+        self.assertTrue(all(row["verification"] == "bytes_copied_and_hashed"
+                            for row in self.rows("attachment_index.jsonl")))
+
     def test_symlink_input_and_attachment_are_rejected(self):
         target = self.write(document())
         link = self.inputs / "linked.json"

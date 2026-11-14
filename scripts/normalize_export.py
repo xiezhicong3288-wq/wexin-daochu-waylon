@@ -445,12 +445,19 @@ class _Archive:
             "nested" if nested else "message", esc(metadata["name"]), esc(message.get("sender")),
             esc(record_id), esc(row["time"]["beijing_from_exported_value"]),
             esc(row["time"]["basis"]), esc(text)))
+        message_status = message.get("resource_status")
+        if message_status not in (None, "available"):
+            self.html.write('<p>媒体状态：%s · 详见 issues.jsonl</p>' % esc(message_status))
         for attachment in attachment_rows:
+            reported = attachment.get("reported")
+            upstream = reported.get("status") if isinstance(reported, dict) else None
+            note = "" if upstream in (None, "available") else " · 上游状态：%s" % esc(upstream)
             if attachment["copied_path"]:
-                self.html.write('<p><a download href="%s">本地附件</a> · %s</p>' % (
-                    esc(attachment["copied_path"]), esc(attachment.get("sha256"))))
+                self.html.write('<p><a download href="%s">本地附件</a> · %s%s</p>' % (
+                    esc(attachment["copied_path"]), esc(attachment.get("sha256")), note))
             else:
-                self.html.write('<p>附件状态：%s</p>' % esc(attachment["verification"]))
+                self.html.write('<p>附件状态：%s%s</p>' % (
+                    esc(attachment["verification"]), note))
         self.html.write("</article>\n")
         quote = message.get("quote")
         if quote is not None:
