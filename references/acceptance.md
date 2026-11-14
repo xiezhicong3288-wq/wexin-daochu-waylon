@@ -20,7 +20,7 @@
 | §18 公证／第三方见证 | 见证 | — | — | — | **缺失** → 公证机关／见证人补 |
 | §18 关联印证 | 关联印证数据 | `source-audit.json`（三段对账） | 独立复算导出哈希与物理行 | `source-audit.json` | 部分提供；聊天外印证 → 举证方补 |
 | 互联网法院规定 §11 第2款 | 可信时间戳／哈希值校验／区块链 | 哈希有；可信时间戳无 | 见 §二锚定契约 | `source-manifest.json` | 哈希已提供；**可信时间戳 pending**；技术本身不自动等于真实性，仍受第1款六项审查约束 |
-| §11 第1款(四)(六) | 提取过程可重现／可通过特定形式验证 | 独立复算命令集（§五） | `openssl`／Node 重算 | — | 已提供（规格）；本机 `sqlite3`／`jq` 缺失见 §七 |
+| §11 第1款(四)(六) | 提取过程可重现／可通过特定形式验证 | 独立复算命令集（§五） | `openssl`／`sqlite3`／Node 重算 | — | 已提供（规格）；CLI 须按 §七 自检通过方计入 |
 | 电子签名法 §8／PIPL §13 | 生成／存储方法、内容完整性、发件人鉴别；第三人信息处理合法基础 | — | — | — | **缺失** → 举证方依 §13 第（二）至（七）项说明合法性基础（并非一律需取同意）；§8 三项分别由方法说明、校验值、主体鉴别映射 |
 
 ## 二、外部时间锚契约
@@ -68,7 +68,7 @@ node -e "const fs=require('fs'),c=require('crypto');const o=JSON.parse(fs.readFi
 sqlite3 -readonly private-snapshot/session.db "PRAGMA integrity_check;"
 ```
 
-`openssl`（C 实现）与 Python `hashlib` 对同一字节须一致：本机实测 `SKILL.md` 同为 `bb9360ed0458ddba7505fe8fbf68ca203ca0686d2b1c6d1cb5d5b94801dab8c1`。第二语言为 Node.js（V8）：RFC 8785 的序列化语义取自 ECMA-262（键按 UTF-16 code units 递归排序、I-JSON 子集、无 NaN／Infinity、Unicode 原样、不输出空白），Node 比 Python 更贴合该 RFC；本机实测 Node 规范化与 Python `json.dumps(sort_keys=True)` 对 `upstream-lock.json` 同得 `0d10dea125b17cd3a0a90f7dd130073349ae2adb9f9252201d37897739949d81`，但该对象只含整数与字符串，含浮点数时以 ECMAScript 数字语义为准，`jq -S` 与 Python 结果不得冒充 JCS。确定性打包：固定排序、规范换行、不写入运行时间；Merkle 根由排序后的叶子哈希两两拼接求得，复算者按同一规则独立计算。`PRAGMA integrity_check` 只做数据库逻辑一致性检查（表／索引／记录／freelist／约束），**不是 WAL 文件字节级完整性校验**，且不含外键检查。
+`openssl`（C 实现）与 Python `hashlib` 对同一字节须一致：本机实测 `SKILL.md` 同为 `bb9360ed0458ddba7505fe8fbf68ca203ca0686d2b1c6d1cb5d5b94801dab8c1`。第二语言为 Node.js（V8）：RFC 8785 的序列化语义取自 ECMA-262（键按 UTF-16 code units 递归排序、I-JSON 子集、无 NaN／Infinity、Unicode 原样、不输出空白），Node 比 Python 更贴合该 RFC；本机实测 Node 规范化与 Python `json.dumps(sort_keys=True)` 对 `upstream-lock.json` 同得 `0d10dea125b17cd3a0a90f7dd130073349ae2adb9f9252201d37897739949d81`，但该对象只含整数与字符串，含浮点数时以 ECMAScript 数字语义为准。`jq -S -cj` 在 I-JSON 子集且无尾随换行时与该规范化同哈希，但键排序按 UTF-8 字节而非 UTF-16 code units：对 `{"😀":1,"\uE000":2}`，JCS 得 😀 在前、`jq -S` 得 `\uE000` 在前，故 `jq -S` 不得冒充 JCS。确定性打包：固定排序、规范换行、不写入运行时间；Merkle 根由排序后的叶子哈希两两拼接求得，复算者按同一规则独立计算。`PRAGMA integrity_check` 只做数据库逻辑一致性检查（表／索引／记录／freelist／约束），**不是 WAL 文件字节级完整性校验**，且不含外键检查。
 
 | 攻击面 | 若 X 改变 | 必然失败／状态 |
 |---|---|---|
@@ -99,9 +99,9 @@ sqlite3 -readonly private-snapshot/session.db "PRAGMA integrity_check;"
 - `raw_bytes_not_available`：授权范围内只读检查未取得微信原始库字节与 WAL/SHM/journal；所有字节级结论仅为 SQLite 格式级，非本机实测，不得绕过既有目录授权读取。`moect_source_unread`：固定提交源码正文未读，§四 中对 `core.data`／`core.exporting` 的引用仅为模块名，不含实现层结论。
 - `tzdata_missing`：缺 IANA 时区数据 → `test_normalize_export.py:294` 断言 `'not_checked' != 'match'`、`test_normalize_export.py:283` 断言 `'success' != 'partial'` 失败。`psutil_missing`：缺 `psutil` → `test_independent_bridge.py:162`、`test_moect_bridge.py:120` 报 `ModuleNotFoundError`。
 - `approval_order_mismatch`：`test_independent_bridge.py:123` 期望 `capture_approval_required`，实得 `path_invalid`（路径校验先于 `moect_bridge.py:946` 的授权检查）。`upstream_unset`：未设 `MOECT_TEST_UPSTREAM` → 48 项跳过，不得宣称完整验收。
-- `tool_unavailable`：本机无 `jq`／`sqlite3` CLI，相应独立检验未执行；`rfc3161_offline_claim`：不得把本地校验写成「标准明示完全离线」，证书撤销状态仍需 CRL。`anchor_pending`：无可验签令牌不得写成已具备；`validation_json_internal`：现行验证记录为内部观测。
-- 本机独立复跑（2026-11-14，系统 Python 3.13.12、未用固定 venv）：161 用例 → 3 失败、2 错误、48 跳过。上述失败**未修**，不得通过放宽检查、安装依赖或改预期值掩盖；固定运行环境与真实材料试点仍待执行。
+- `tool_unavailable`：§五任一独立 CLI（`openssl`／`sqlite3`／Node）缺失、官方校验值不符或只读自检未返回 `ok`，对应检验不计入复算结果；独立 CLI 二进制须与官方发布校验值一致方可使用，`jq -S` 仅为键排序对照、不等价于 JCS，缺失不构成验收缺口。`rfc3161_offline_claim`：不得把本地校验写成「标准明示完全离线」，证书撤销状态仍需 CRL。`anchor_pending`：无可验签令牌不得写成已具备；`validation_json_internal`：现行验证记录为内部观测。
+- 本机独立复跑（2026-11-14）：系统 Python 3.13.12 未用固定 venv → 161 用例 3 失败、2 错误、48 跳过，根因是缺 `psutil` 与 IANA 时区数据，未改断言或预期值；按固定 venv＋`MOECT_TEST_UPSTREAM` 复跑 → 154 用例 OK、13 跳过，属内部观测、不作验收依据。真实材料试点与确切微信版本验收仍未执行 → `raw_bytes_not_available`、`anchor_pending`。
 
 ## 八、真实试点
 
-Windows 部署须先在该环境跑合成验证；`path.stat` 与句柄 `fstat` 的 ctime 含义可能不同，跨 API 对齐文件身份、大小、mtime 与创建时间，不能删 ctime 检查掩盖误报。准备器核对 ZIP 原始成员名（不只 Windows 规范化后的名称）；测试库显式关闭；符号链接权限不足只标该用例未测、不提权。在授权目标机与确切微信版本上完成一单聊、一群聊试点，全范围程序对账，抽核不少于 30 条（不足全查）覆盖实际存在的类型；未解释的正文、身份、时间差异不能通过。使用合成账号、聊天、数据库作测试，不提交真实资料、密钥、身份映射或敏感日志；真实用户反馈与机器测试分别记录。
+Windows 部署须先在该环境跑合成验证；`path.stat` 与句柄 `fstat` 的 ctime 含义可能不同，跨 API 对齐文件身份、大小、mtime 与创建时间，不能删 ctime 检查掩盖误报。准备器核对 ZIP 原始成员名（不只 Windows 规范化后的名称）；测试库显式关闭；符号链接权限不足只标该用例未测、不提权。在授权目标机完成一单聊、一群聊试点，全范围程序对账，抽核不少于 30 条（不足全查）覆盖实际存在的类型；未解释的正文、身份、时间差异不能通过。机器可判门槛：现场记录确切微信版本及进程／账号目录绑定证据，缺则 `version_unverified`；无 `capture` 回执为 `capture_not_run`；抽核条数或类型覆盖不足为 `sampling_incomplete`；任一成立即不得写「真实试点通过」。使用合成账号、聊天、数据库作测试，不提交真实资料、密钥、身份映射或敏感日志；真实用户反馈与机器测试分别记录。
