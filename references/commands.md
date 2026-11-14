@@ -38,7 +38,7 @@ PowerShell 中执行带引号的可执行路径须在命令前用 `&`；可先�
 & "<运行环境Python>" "<技能目录>\scripts\moect_bridge.py" --upstream "<运行目录>\source" capture --account-dir "<账号目录>" --account-id "<wxid>" --account-scope "<范围>" --pid <已验证PID> --process-exe "<程序绝对路径>" --process-sha256 "<实际SHA256>" --process-start-time <实际创建时间> --session "<会话ID>" --format json --output "<全新试点目录>" --live-read-approved
 ```
 
-`--scan-timeout` 不超过 60 秒。进程与账号目录关系、用户身份、程序哈希或创建时间不匹配即停止，不提权、不扫描其他进程。解密前校验冻结 WAL 的头部、盐值、累计校验与提交边界；第一页密钥校验不等于全页 HMAC 或库/日志密码学关联，跨库共同时间点未自动保证。
+`--scan-timeout` 不超过 60 秒。`--process-start-time` 须为 `psutil.Process.create_time()` 的完整浮点秒：绑定按 `(pid, create_time, exe, username)` 精确相等比较，填整数秒会触发 `process_not_bound`。还须能证明目标进程已打开 `<账号目录>\db_storage` 下的 `.db`／`.db-wal`，否则同为 `process_not_bound`；进程与账号目录关系、用户身份、程序哈希或创建时间不匹配即停止，不提权、不扫描其他进程。解密前校验冻结 WAL 的头部、盐值、累计校验与提交边界；第一页密钥校验不等于全页 HMAC 或库/日志密码学关联，跨库共同时间点未自动保证。
 
 ## 中立整理
 
