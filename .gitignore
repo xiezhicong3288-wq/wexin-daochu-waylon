@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .venv/
+logs/
+_user_meta.json
+.runtime-cache
