@@ -3,11 +3,15 @@ name: wexin-daochu-waylon
 description: "Export authorized WeChat chats locally on Windows with pinned Moect, or organize Moect JSON/JSONL into neutral archives with stable account and conversation IDs, original text, provenance, and attachment status. Use for local Moect setup, WeChat export, display-name organization, format conversion, and failure recovery. Keep real chats and keys on the authorized device."
 description_zh: "微信聊天本机导出与中立归档，保留原文与来源"
 description_en: "Local WeChat export and neutral archival with original text and provenance"
+metadata:
+  version: "0.2.2"
 ---
 
 # 微信本机导出与中立归档
 
-适配 0.2.1；Moect 基线 v1.2.8 / 88dffc7d0d06632f8061b0a19aa82b38337d7ee5。先保留原文和来源，再组织材料；缺失和未知必须看得见。
+技能知识库 0.2.2（2026-11-19）。运行组件固定 Moect v1.2.8 / 88dffc7d0d06632f8061b0a19aa82b38337d7ee5。上游 v1.3.0 已核源码和合成聊天文件兼容性，真机运行另需验证。先保留原文和来源，再组织材料。
+
+先按任务目标查 [微信官方路径与文件兼容性](references/wechat-official-and-moect.md)。换机、备份和恢复使用用户现有微信客户端对应功能；账号个人信息副本走隐私指引的独立入口；已有 Moect 会话 JSON/JSONL 时按下列条件中立整理。
 
 **正确性判据**：不信任第三方能在不运行本仓库代码、不采信本机时钟、目录名、文件数量、内部观测与历史汇报的前提下独立复算并判错。唯一验收依据是 [验收要求](references/acceptance.md) 的追溯矩阵（外部条款 → 工程断言 → 独立复算 → 证据文件 → 状态）；本文件与仓库内其它文档只写操作，不自证正确性；内部观测、本机实测、commit message、历史汇报与仓库自带验证记录均不作验收依据。任何声明若不存在不依赖本仓库的检验能判其错，必须删除。
 

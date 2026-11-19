@@ -1,6 +1,7 @@
 # 来源与改造边界
 
 - 上游 https://github.com/mofan6/Moect，标签 v1.2.8，提交 88dffc7d0d06632f8061b0a19aa82b38337d7ee5，GPL-3.0（完整原文见 [LICENSE](../LICENSE)），保留原作者及第三方声明。
+- 截至 2026-11-19，Moect 最新已核正式发布为 v1.3.0（提交 `7498e9f21ab283edb55a5d6a2e17c7ad696cf168`）。新版会话 JSON/JSONL 的源码形状与已锁版本相同，并以合成文件交给既有整理器复测。运行锁的覆盖范围与新版功能见 [微信官方路径与文件兼容性](wechat-official-and-moect.md)。
 - 准备器只从固定官方源包取 [upstream-lock.json](upstream-lock.json) 中逐文件校验的子集（含上游 LICENSE 与 THIRD_PARTY_NOTICES.md）；上游源码不堆入技能目录，压缩包内容不执行。
 - 桥接器只调用锁定源码子集内的导出接口，不开放桌面 Service.call 全功能，不假定旧 CLI 等价；运行限制关闭隐式网络、子进程与密钥发现路径。这是锁定源码与固定依赖的约束，不是任意代码的系统级沙箱，原上游文件不改。
 - 采集先保留原始字节，再校验并消费同一冻结输入。WAL 校验匹配只支持本文件观察到的存储字节规则，不外推到所有微信/SQLCipher 版本；第一页 HMAC、WAL 校验链、SQLite 结构检查各有独立证明范围，不宣称逐页认证、库/日志密码学绑定或多库同一时点。独立 `source_audit.py` 与只读 `wal_guard.py` 使核对独立于取数路径。

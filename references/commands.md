@@ -48,6 +48,8 @@ python "<技能目录>\scripts\normalize_export.py" --input "<Moect导出JSON或
 
 `--input` 可重复；普通 JSON 上限 256 MiB，JSONL 单行 16 MiB，超限明确停止，不删消息凑兼容。`manifest.json` 与退出码同时判断：success/0、partial/1、failed/2；失败目录即使含部分索引也不得进入后续分析。中立索引不是证据技能的原生输入，后续适配须读其现行 schema 显式转换。
 
+先按 [微信官方路径与文件兼容性](wechat-official-and-moect.md) 核对文件来源与类型。v1.3.0 会话导出可按合成验证范围使用此命令；同批核对 `manifest.json` 的来源和上游元数据，并保留导出件及其相邻资源目录。
+
 ## 核对最终整理去向
 
 ```powershell

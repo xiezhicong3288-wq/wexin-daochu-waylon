@@ -160,6 +160,50 @@ class NormalizeTests(unittest.TestCase):
         self.assertEqual(self.rows()[0]["source_type"], 99887)
         self.assertEqual(self.rows()[0]["content"], raw["text"])
 
+    def test_v130_session_json_and_jsonl_preserve_fields_and_parent_links(self):
+        # Synthetic values follow the v1.3.0 session writer and game metadata.
+        game = {"type": "dice", "value": 6, "label": "骰子：6", "md5": "a" * 32}
+        embedded = message(server_id="0", kind="emoji", type=47, text="[骰子：6]",
+                           extra={"game_emoji": game}, resource_status="skipped")
+        raw = message(forward={"messages": [embedded], "count": 1})
+        export = document([raw])
+        filters = {"start": 1767225600, "end": 1767225610}
+        export["metadata"].update(version="1.3.0", filters=filters)
+        json_path = self.write(export, "session.json")
+        jsonl_path = self.inputs / "session.jsonl"
+        jsonl_path.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in (
+            {"metadata": export["metadata"]}, raw)) + "\n", encoding="utf-8")
+
+        for path, location in ((json_path, "$.messages[0]"), (jsonl_path, "line:2")):
+            with self.subTest(format=path.suffix):
+                self.out = self.base / path.suffix[1:]
+                result = self.run_export([path])
+                self.assertEqual((result["status"], result["exit_code"]), ("partial", 1))
+                self.assertEqual(result["counts"]["top_level_messages"], 1)
+                self.assertEqual(result["counts"]["nested_messages"], 1)
+                manifest = json.loads(Path(result["manifest"]).read_text(encoding="utf-8"))
+                source = manifest["sources"][0]
+                self.assertEqual(source["metadata"]["version"], "1.3.0")
+                self.assertEqual(source["metadata"]["filters"], filters)
+                self.assertEqual((self.out / source["original_copy"]).read_bytes(), path.read_bytes())
+                parent, child = self.rows()
+                self.assertEqual(parent["content"], raw["text"])
+                self.assertEqual(parent["server_id"], raw["server_id"])
+                self.assertEqual(parent["source"]["location"], location)
+                self.assertEqual(parent["source"]["file_sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+                self.assertEqual(child["parent_record_id"], parent["record_id"])
+                self.assertEqual(child["source"]["location"], location + ".forward.messages[0]")
+                self.assertEqual(child["source_fields"]["extra"], {"game_emoji": game})
+                self.assertEqual(child["source_fields"]["resource_status"], "skipped")
+
+    def test_v130_favorites_json_is_not_a_session_export(self):
+        favorites = self.write({"application": "Moect", "version": "1.3.0",
+                                "category": "favorites", "items": [{"text": "合成收藏"}]})
+        result = self.run_export([favorites])
+        self.assertEqual((result["status"], result["exit_code"]), ("failed", 2))
+        self.assertEqual(self.rows(), [])
+        self.assertIn("unrecognized_legacy_export", [row["code"] for row in self.rows("issues.jsonl")])
+
     def test_nested_relationships_do_not_inflate_top_level_count(self):
         raw = message(kind="chatrecord", quote=message(server_id="quote"),
                       forward={"messages": [message(server_id="0")], "count": 1})

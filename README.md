@@ -2,6 +2,8 @@
 
 微信聊天本机导出与中立归档，保留原文与来源。
 
+技能知识库 0.2.2（2026-11-19）。[微信官方路径与文件兼容性](references/wechat-official-and-moect.md) 涵盖官方换机迁移、备份恢复、个人信息副本和 Moect v1.3.0 会话文件。桥接运行组件按 [源码锁](references/upstream-lock.json) 使用 Moect v1.2.8。
+
 ## 安装
 
 交给支持 Skill 安装的助手或宿主安装仓库根目录的 [SKILL.md](SKILL.md) 及配套文件：
