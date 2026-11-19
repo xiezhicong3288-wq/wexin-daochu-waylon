@@ -40,6 +40,20 @@ PowerShell 中执行带引号的可执行路径须在命令前用 `&`；可先�
 
 `--scan-timeout` 不超过 60 秒。`--process-start-time` 须为 `psutil.Process.create_time()` 的完整浮点秒：绑定按 `(pid, create_time, exe, username)` 精确相等比较，填整数秒会触发 `process_not_bound`。还须能证明目标进程已打开 `<账号目录>\db_storage` 下的 `.db`／`.db-wal`，否则同为 `process_not_bound`；进程与账号目录关系、用户身份、程序哈希或创建时间不匹配即停止，不提权、不扫描其他进程。解密前校验冻结 WAL 的头部、盐值、累计校验与提交边界；第一页密钥校验不等于全页 HMAC 或库/日志密码学关联，跨库共同时间点未自动保证。
 
+## 输入预检
+
+```powershell
+python "<技能目录>\scripts\normalize_export.py" --input "<已获授权的文件或目录>" --account-scope "<已确认范围>" --inspect
+```
+
+只读预检向 stdout 写 `moect-input-inspection/1` 回执。输入可重复，回执按输入顺序列来源线索、格式、问题和处理建议。没有确认范围时省略 `--account-scope`。已从官方邮件确认来源的个人信息副本用 `--source-kind wechat-personal-copy`，已由客户端确认的原生备份可用 `--source-kind wechat-native-backup`。`--source-kind` 仅可配一个输入，记录来源声明并提示相应处理路径，无需读取内容。
+
+- `ready/0` 表示结构及可比较的账号声明通过检查。单文件不声明账号时，回执记录 `account_claim_present:false`。仍须核对来源、授权和对象同一性，`account_scope_verified` 保持 `false`。
+- `review/1` 表示文件声明为演示导出、账号范围未确认，或同批存在未声明账号的 Moect 文件。对照原导出或客户端确认范围，按账号分开。筛选条件仅标明有无，核对目标时段以原导出器及实际数据为准。
+- `blocked/2` 表示输入形状不兼容、无法识别、已知账号声明冲突，或发现记录、数量错误。按 `next_step` 核对原件，保留原名和相邻资源。JSON 大于 256 MiB 时按原范围重新导出 JSONL。`RMFH` 和目录名只显示原生备份线索，恢复走微信客户端。
+
+JSONL 扫描全文逐行判断，回执只含计数、结构与安全错误码，不回显正文、路径或账号。资源文件、嵌入内容、设备状态和原始数据真实性由后续步骤检查，预检不会生成副本、归档目录或资产。
+
 ## 中立整理
 
 ```powershell

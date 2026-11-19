@@ -55,6 +55,106 @@ class NormalizeTests(unittest.TestCase):
     def run_export(self, paths):
         return normalizer.normalize(paths, "synthetic-account", self.out)
 
+    def inspect(self, paths, *options):
+        args = [arg for path in paths for arg in ("--input", str(path))]
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = normalizer.main([*args, "--inspect", *options])
+        result = json.loads(output.getvalue())
+        self.assertEqual(result["schema"], "moect-input-inspection/1")
+        self.assertEqual(result["input_count"], len(paths))
+        self.assertEqual(result["exit_code"], code)
+        self.assertFalse(self.out.exists())
+        return result
+
+    def test_inspect_supported_shapes_only_returns_nonsensitive_summary(self):
+        export = document([message(text="never echo fixture text")])
+        export["metadata"].update(demo=False, exported_account_id="never echo account")
+        gui_json = self.write(export, "never echo filename.json")
+        gui_jsonl = self.inputs / "session.jsonl"
+        gui_jsonl.write_text("\n".join(map(json.dumps, (
+            {"metadata": export["metadata"]}, export["messages"][0]))), encoding="utf-8")
+        old_json = self.write(dict(session="synthetic_chat", display="never echo display",
+                                   wxid="never echo account", exported_at="2026-01-01",
+                                   count=1, messages=export["messages"]), "legacy.json")
+        files = [gui_json, gui_jsonl, old_json]
+        before = {path: path.read_bytes() for path in files}
+        result = self.inspect(files, "--account-scope", "never echo scope")
+        self.assertEqual(result["status"], "ready")
+        self.assertFalse(result["account_scope_verified"])
+        self.assertEqual([item["format"] for item in result["inputs"]],
+                         ["moect-gui-json", "moect-gui-jsonl", "moect-legacy-json"])
+        self.assertEqual([item["message_count"] for item in result["inputs"]], [1, 1, 1])
+        self.assertNotIn("never echo", json.dumps(result))
+        self.assertEqual({path: path.read_bytes() for path in self.inputs.iterdir()}, before)
+
+    def test_inspect_separates_declared_personal_copy_and_native_backup_clues(self):
+        package = self.inputs / "ChatPackage"
+        package.mkdir()
+        header = self.inputs / "renamed.json"
+        header.write_bytes(b"RMFHsynthetic-not-a-verified-backup")
+        guessed = self.inputs / "ambiguous.enc"
+        guessed.write_bytes(b"unknown fixture")
+        result = self.inspect([package, header, guessed])
+        self.assertEqual(result["status"], "blocked")
+        self.assertEqual([item["format"] for item in result["inputs"]],
+                         ["wechat-native-backup", "wechat-native-backup", "unknown"])
+        self.assertEqual([item["basis"] for item in result["inputs"]],
+                         ["directory_marker_only", "header_marker_only", "unproven"])
+        with mock.patch.object(normalizer.os, "open", side_effect=AssertionError("opened declared copy")):
+            personal = self.inspect([guessed], "--source-kind", "wechat-personal-copy")["inputs"][0]
+        self.assertEqual(personal["basis"], "caller_declared_origin")
+        self.assertEqual(personal["next_step"], "retain_as_personal_information_material")
+        self.assertEqual(personal["status"], "blocked")
+
+    def test_inspect_rejects_malformed_rows_and_non_session_inputs(self):
+        export = document([message(session="different_conversation")])
+        export["count"] = 2
+        mismatched = self.write(export, "mismatched.json")
+        jsonl = self.inputs / "invalid.jsonl"
+        jsonl.write_text(json.dumps({"metadata": export["metadata"]}) + '\n{"private":"fixture"\n{}\n',
+                         encoding="utf-8")
+        favorites = self.write(dict(application="Moect", category="favorites", items=[]), "favorites.json")
+        renamed = self.write(dict(display="different private fixture", messages=[]), "renamed.json")
+        result = self.inspect([mismatched, jsonl, favorites, renamed], "--account-scope", "synthetic-account")
+        mismatch, invalid, collection, unknown = result["inputs"]
+        self.assertEqual(result["status"], "blocked")
+        self.assertEqual(mismatch["issues"], ["declared_count_mismatch", "message_session_mismatch"])
+        self.assertEqual(invalid["problem_record_count"], 2)
+        self.assertEqual(invalid["issues"], ["invalid_jsonl_record", "invalid_message_record"])
+        self.assertEqual((collection["format"], collection["category"]), ("moect-non-session", "favorites"))
+        self.assertEqual(unknown["format"], "unknown")
+        self.assertNotIn("private", json.dumps(result))
+
+    def test_inspect_mixed_or_missing_account_claims_never_pass_batch(self):
+        export = document()
+        export["metadata"].update(demo=False, exported_account_id="synthetic-owner-a")
+        owner_a = self.write(export, "a.json")
+        export["metadata"]["exported_account_id"] = "synthetic-owner-b"
+        owner_b = self.write(export, "b.json")
+        export["metadata"].pop("exported_account_id")
+        no_owner = self.write(export, "unknown.json")
+        options = ("--account-scope", "synthetic-account")
+        mixed = self.inspect([owner_a, owner_b], *options)
+        self.assertEqual((mixed["status"], mixed["issues"]), ("blocked", ["mixed_account_claims"]))
+        review = self.inspect([owner_a, no_owner], *options)
+        self.assertEqual((review["status"], review["issues"]), ("review", ["batch_account_unconfirmed"]))
+        no_scope = self.inspect([owner_a])
+        self.assertEqual(no_scope["inputs"][0]["issues"], ["account_scope_unchecked"])
+        export["metadata"]["account_scope"] = "wrong-scope"
+        self.assertEqual(self.inspect([self.write(export)], *options)["inputs"][0]["issues"],
+                         ["declared_account_scope_conflict"])
+
+    def test_inspect_demonstration_and_oversize_guidance(self):
+        demo = self.write(document())
+        self.assertEqual(self.inspect([demo], "--account-scope", "synthetic-account")["status"], "review")
+        with mock.patch.object(normalizer, "MAX_JSON_BYTES", 20):
+            result = self.inspect([demo])["inputs"][0]
+        self.assertEqual(result["next_step"], "export_same_scope_as_jsonl")
+        bad_request = self.inspect([demo, demo], "--source-kind", "wechat-personal-copy")
+        self.assertEqual((bad_request["error_code"], bad_request["inputs"]),
+                         ("source_kind_requires_single_input", []))
+
     def test_gui_preserves_original_bytes_text_and_source_locations(self):
         path = self.write(document())
         before = path.read_bytes()

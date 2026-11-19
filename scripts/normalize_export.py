@@ -254,6 +254,58 @@ def _metadata(document, jsonl=False):
     }
 
 
+def _account_claims(metadata, scope):
+    declared_scope = metadata.get("account_scope")
+    if scope is not None and declared_scope is not None and declared_scope != scope:
+        raise NormalizeError("declared_account_scope_conflict")
+    owner = metadata.get("exported_account_id")
+    owner = owner if isinstance(owner, str) and owner else None
+    bridge_owner = metadata.get("account_id")
+    if bridge_owner is not None:
+        if not isinstance(bridge_owner, str) or not bridge_owner:
+            raise NormalizeError("invalid_exported_account_id")
+        if metadata.get("account_id_kind") != "wxid":
+            raise NormalizeError("unsupported_account_id_kind")
+        if owner and owner != bridge_owner:
+            raise NormalizeError("exported_account_id_conflict")
+        owner = bridge_owner
+    return owner, declared_scope
+
+
+def _jsonl_header(stream):
+    header = stream.readline(MAX_LINE_BYTES + 1)
+    if len(header) > MAX_LINE_BYTES:
+        raise NormalizeError("jsonl_header_size_limit")
+    try:
+        document = _strict_json(header.decode("utf-8-sig"))
+    except (UnicodeError, json.JSONDecodeError, RecursionError):
+        raise NormalizeError("invalid_jsonl_header") from None
+    return _metadata(document, jsonl=True)
+
+
+def _jsonl_records(stream):
+    number = 1
+    while line := stream.readline(MAX_LINE_BYTES + 1):
+        number += 1
+        location = "line:%d" % number
+        if len(line) > MAX_LINE_BYTES:
+            while line and not line.endswith(b"\n"):
+                line = stream.readline(MAX_LINE_BYTES + 1)
+            yield location, None, "jsonl_record_size_limit"
+        elif line.strip():
+            try:
+                message = _strict_json(line.decode("utf-8"))
+            except (UnicodeError, ValueError, RecursionError):
+                yield location, None, "invalid_jsonl_record"
+            else:
+                yield location, message, None
+
+
+def _valid_scope(scope):
+    return (isinstance(scope, str) and scope.strip() and len(scope) <= 256
+            and not any(ord(c) < 32 for c in scope))
+
+
 class _Archive:
     def __init__(self, output, account, writers):
         self.output, self.account = output, account
@@ -269,22 +321,12 @@ class _Archive:
         self.account_conflict = False
 
     def register_account(self, source, metadata):
-        declared_scope = metadata.get("account_scope")
-        if declared_scope is not None and declared_scope != self.account:
-            self.account_conflict = True
-            raise NormalizeError("declared_account_scope_conflict")
-        owner = metadata.get("exported_account_id")
-        owner = owner if isinstance(owner, str) and owner else None
-        bridge_owner = metadata.get("account_id")
-        if bridge_owner is not None:
-            if not isinstance(bridge_owner, str) or not bridge_owner:
-                raise NormalizeError("invalid_exported_account_id")
-            if metadata.get("account_id_kind") != "wxid":
-                raise NormalizeError("unsupported_account_id_kind")
-            if owner and owner != bridge_owner:
+        try:
+            owner, _ = _account_claims(metadata, self.account)
+        except NormalizeError as exc:
+            if str(exc) in ("declared_account_scope_conflict", "exported_account_id_conflict"):
                 self.account_conflict = True
-                raise NormalizeError("exported_account_id_conflict")
-            owner = bridge_owner
+            raise
         source["exported_account_id"] = owner
         source["account_binding"] = ("caller_scope_and_exported_owner_unverified" if owner
                                      else "caller_declared_scope_only")
@@ -529,43 +571,18 @@ class _Archive:
 
     def process_jsonl(self, copy, source):
         with copy.open("rb") as stream:
-            header = stream.readline(MAX_LINE_BYTES + 1)
-            if len(header) > MAX_LINE_BYTES:
-                raise NormalizeError("jsonl_header_size_limit")
-            try:
-                document = _strict_json(header.decode("utf-8-sig"))
-            except (UnicodeError, json.JSONDecodeError, RecursionError):
-                raise NormalizeError("invalid_jsonl_header") from None
-            shape, metadata = _metadata(document, jsonl=True)
+            shape, metadata = _jsonl_header(stream)
             source.update(schema=shape, metadata=metadata)
             self.register_account(source, metadata)
             self.counts["valid_input_files"] += 1
-            number = 1
-            while True:
-                line = stream.readline(MAX_LINE_BYTES + 1)
-                if not line:
-                    break
-                number += 1
-                location = "line:%d" % number
-                if len(line) > MAX_LINE_BYTES:
-                    while line and not line.endswith(b"\n"):
-                        line = stream.readline(MAX_LINE_BYTES + 1)
-                    self.counts["top_level_seen"] += 1
-                    self.counts["rejected_records"] += 1
-                    self.counts["top_level_rejected"] += 1
-                    self.issue("jsonl_record_size_limit", source, location, "error")
-                    continue
-                if not line.strip():
-                    continue
+            for location, message, error in _jsonl_records(stream):
                 self.counts["top_level_seen"] += 1
-                try:
-                    message = _strict_json(line.decode("utf-8"))
-                except (UnicodeError, json.JSONDecodeError, NormalizeError, RecursionError):
+                if error:
                     self.counts["rejected_records"] += 1
                     self.counts["top_level_rejected"] += 1
-                    self.issue("invalid_jsonl_record", source, location, "error")
-                    continue
-                self.record(message, source, metadata, location)
+                    self.issue(error, source, location, "error")
+                else:
+                    self.record(message, source, metadata, location)
 
 
 def normalize(inputs, account_scope, out):
@@ -578,8 +595,7 @@ def normalize(inputs, account_scope, out):
         inputs = [inputs]
     if not inputs:
         raise NormalizeError("input_required")
-    if (not isinstance(account_scope, str) or not account_scope.strip()
-            or len(account_scope) > 256 or any(ord(c) < 32 for c in account_scope)):
+    if not _valid_scope(account_scope):
         raise NormalizeError("invalid_account_scope")
     output = Path(out).expanduser().absolute()
     _no_links(output)
@@ -676,17 +692,196 @@ def _outcome(archive):
     return "success", 0
 
 
+INSPECTION_HINTS = {
+    "wechat-native-backup": "verify_origin_and_use_wechat_restore_on_authorized_device",
+    "wechat-personal-copy": "retain_as_personal_information_material",
+    "moect-non-session": "retain_separately_and_select_session_json_or_jsonl",
+    "sqlite-container": "verify_provenance_and_supported_snapshot_before_any_export",
+    "unknown": "verify_origin_or_export_session_json_or_jsonl",
+}
+
+INSPECTION_ISSUE_HINTS = {
+    "json_size_limit_use_jsonl": "export_same_scope_as_jsonl",
+    "declared_account_scope_conflict": "check_selected_scope_against_original_export",
+    "exported_account_id_conflict": "separate_conflicting_account_sources",
+    "linked_path_rejected": "select_original_path_without_links",
+    "input_changed_during_inspection": "repeat_inspection_after_export_is_stable",
+}
+
+
+def _inspect_export(stream, extension, size, item, scope):
+    issues = set()
+    if extension == ".jsonl":
+        kind, metadata = _jsonl_header(stream)
+        records = _jsonl_records(stream)
+    else:
+        if size > MAX_JSON_BYTES:
+            raise NormalizeError("json_size_limit_use_jsonl")
+        data = stream.read(size + 1)
+        if len(data) != size:
+            raise NormalizeError("input_changed_during_inspection")
+        try:
+            document = _strict_json(data.decode("utf-8-sig"))
+        except (UnicodeError, ValueError, RecursionError) as exc:
+            if isinstance(exc, NormalizeError):
+                raise
+            raise NormalizeError("invalid_json") from None
+        if (isinstance(document, dict) and document.get("application") == "Moect"
+                and document.get("category") in ("favorites", "stickers", "moments")
+                and isinstance(document.get("items"), list)):
+            item["format"] = "moect-non-session"
+            item["category"] = document["category"]
+            return None, None
+        kind, metadata = _metadata(document)
+        messages = document["messages"]
+        declared = document.get("count")
+        if type(declared) is not int or declared != len(messages):
+            issues.add("declared_count_mismatch")
+        records = ((None, message, None) for message in messages)
+    item.update(format=kind, message_count=0, problem_record_count=0)
+    owner, declared_scope = _account_claims(metadata, scope)
+    if declared_scope is not None and not _valid_scope(declared_scope):
+        raise NormalizeError("invalid_declared_account_scope")
+    if "exported_account_id" in metadata and not isinstance(metadata["exported_account_id"], str):
+        raise NormalizeError("invalid_exported_account_id")
+    item["account_claim_present"] = owner is not None
+    item["filters_present"] = bool(metadata.get("filters"))
+    if "filters" in metadata and not isinstance(metadata["filters"], dict):
+        issues.add("invalid_export_filters")
+    if "demo" in metadata and not isinstance(metadata["demo"], bool):
+        issues.add("invalid_demo_flag")
+    for _, message, error in records:
+        item["message_count"] += 1
+        if error is None:
+            if not isinstance(message, dict) or not isinstance(message.get("text"), str):
+                error = "invalid_message_record"
+            elif message.get("session") not in (None, metadata["session"]):
+                error = "message_session_mismatch"
+        if error:
+            item["problem_record_count"] += 1
+            issues.add(error)
+    item["issues"] = sorted(issues)
+    item["demo"] = metadata.get("demo") is True
+    return owner, declared_scope
+
+
+def _inspect_source(path, info, item, scope, declared_kind):
+    if not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
+        raise NormalizeError("input_is_not_regular_file")
+    if declared_kind:
+        item.update(format=declared_kind, basis="caller_declared_origin")
+        return None, None
+    if stat.S_ISDIR(info.st_mode):
+        if (path.name.casefold() == "chatpackage"
+                or all(os.path.lexists(path / name) for name in ("ChatPackage", "Index"))):
+            item.update(format="wechat-native-backup", basis="directory_marker_only")
+        return None, None
+    extension = path.suffix.lower()
+    if extension not in (".json", ".jsonl", ".dat", ".enc", ".db"):
+        return None, None
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    with os.fdopen(os.open(path, flags), "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        if (info.st_dev, info.st_ino) != (opened.st_dev, opened.st_ino):
+            raise NormalizeError("input_changed_during_inspection")
+        prefix = stream.read(16)
+        if prefix.startswith(b"RMFH"):
+            item.update(format="wechat-native-backup", basis="header_marker_only")
+        elif prefix == b"SQLite format 3\x00":
+            item.update(format="sqlite-container", basis="header_marker_only")
+        elif extension in (".json", ".jsonl"):
+            stream.seek(0)
+            claims = _inspect_export(stream, extension, opened.st_size, item, scope)
+            after = os.fstat(stream.fileno())
+            current = path.stat()
+            if ((opened.st_size, opened.st_mtime_ns) != (after.st_size, after.st_mtime_ns)
+                    or (info.st_dev, info.st_ino) != (current.st_dev, current.st_ino)):
+                raise NormalizeError("input_changed_during_inspection")
+            item["basis"] = "export_structure_only"
+            return claims
+    return None, None
+
+
+def inspect_inputs(inputs, scope=None, declared_kind=None):
+    if scope is not None and not _valid_scope(scope):
+        raise NormalizeError("invalid_account_scope")
+    if declared_kind and len(inputs) != 1:
+        raise NormalizeError("source_kind_requires_single_input")
+    items, owners, declared_scopes, paths = [], set(), set(), set()
+    for index, raw_path in enumerate(inputs, 1):
+        item = {"input_index": index, "format": "unknown", "basis": "unproven",
+                "issues": [], "status": "blocked"}
+        items.append(item)
+        try:
+            path = Path(raw_path).expanduser().absolute()
+            _no_links(path)
+            info = path.stat()
+            resolved = path.resolve()
+            if resolved in paths:
+                raise NormalizeError("duplicate_input_path")
+            paths.add(resolved)
+            owner, declared_scope = _inspect_source(path, info, item, scope, declared_kind)
+            if owner is not None:
+                owners.add(owner)
+            if declared_scope is not None:
+                declared_scopes.add(declared_scope)
+            if "message_count" in item and not item["issues"]:
+                item["status"] = "review" if scope is None or item["demo"] else "ready"
+                if item["status"] == "review":
+                    item["issues"].append("demo_export" if item["demo"] else "account_scope_unchecked")
+        except NormalizeError as exc:
+            item["issues"].append(str(exc))
+        except (OSError, ValueError, RuntimeError):
+            item["issues"].append("input_unavailable")
+        if item["format"] == "unknown" and not item["issues"]:
+            item["issues"].append("unrecognized_input")
+        hint = next((INSPECTION_ISSUE_HINTS[code] for code in item["issues"]
+                     if code in INSPECTION_ISSUE_HINTS), None)
+        item["next_step"] = hint or INSPECTION_HINTS.get(item["format"], {
+            "ready": "confirm_authorized_scope_and_normalize",
+            "review": "review_declared_scope_and_demo_status",
+            "blocked": "review_source_structure_or_export_again",
+        }[item["status"]])
+    issues = []
+    blocked = any(item["status"] == "blocked" for item in items)
+    if len(owners) > 1 or len(declared_scopes) > 1:
+        issues.append("mixed_account_claims")
+        blocked = True
+    elif len(items) > 1 and any(item.get("account_claim_present") is False for item in items):
+        issues.append("batch_account_unconfirmed")
+    status = "blocked" if blocked else (
+        "review" if issues or any(item["status"] == "review" for item in items) else "ready")
+    return {"schema": "moect-input-inspection/1", "status": status,
+            "exit_code": {"ready": 0, "review": 1, "blocked": 2}[status],
+            "input_count": len(items), "account_scope_verified": False,
+            "issues": issues, "inputs": items}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="本机整理 Moect JSON/JSONL 导出，不联网、不改原件")
     parser.add_argument("--input", action="append", required=True)
-    parser.add_argument("--account-scope", required=True)
-    parser.add_argument("--out", required=True)
+    parser.add_argument("--account-scope")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--out", help="整理到全新目录")
+    mode.add_argument("--inspect", action="store_true", help="只读预检，不生成归档")
+    parser.add_argument("--source-kind", choices=("wechat-native-backup", "wechat-personal-copy"),
+                        help="只在预检登记已知来源，限单个输入")
     args = parser.parse_args(argv)
+    if not args.inspect and (args.account_scope is None or args.source_kind):
+        parser.error("--out requires --account-scope; --source-kind is only for --inspect")
     try:
-        result = normalize(args.input, args.account_scope, args.out)
+        if args.inspect:
+            result = inspect_inputs(args.input, args.account_scope, args.source_kind)
+        else:
+            result = normalize(args.input, args.account_scope, args.out)
     except (NormalizeError, TypeError) as exc:
         error = str(exc) if isinstance(exc, NormalizeError) else "invalid_arguments"
         result = {"status": "failed", "exit_code": 2, "error_code": error}
+        if args.inspect:
+            result.update(schema="moect-input-inspection/1", status="blocked",
+                          input_count=len(args.input), account_scope_verified=False,
+                          issues=[], inputs=[])
     print(json.dumps(result, ensure_ascii=False))
     return result["exit_code"]
 
