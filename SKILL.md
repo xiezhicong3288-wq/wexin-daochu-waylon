@@ -4,12 +4,12 @@ description: "Export authorized WeChat chats locally on Windows with pinned Moec
 description_zh: "微信聊天本机导出与中立归档，保留原文与来源"
 description_en: "Local WeChat export and neutral archival with original text and provenance"
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # 微信本机导出与中立归档
 
-技能知识库 0.3.0（2026-11-19）。运行组件固定 Moect v1.2.8 / 88dffc7d0d06632f8061b0a19aa82b38337d7ee5。上游 v1.3.0 已核源码和合成聊天文件兼容性，真机运行另需验证。先保留原文和来源，再组织材料。
+技能知识库 0.3.1（2026-11-20）。运行组件固定 Moect v1.2.8 / 88dffc7d0d06632f8061b0a19aa82b38337d7ee5。上游 v1.3.0 已核源码和合成聊天文件兼容性，真机运行另需验证。先保留原文和来源，再组织材料。
 
 先按任务目标查 [微信官方路径、客户端渠道与文件兼容性](references/wechat-official-and-moect.md)。换机、备份和恢复使用用户现有微信客户端对应功能。账号个人信息副本走隐私指引的独立入口。收到文件但来源或类型不明时，按 [输入预检](references/commands.md#输入预检) 使用 `normalize_export.py --inspect`。
 

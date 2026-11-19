@@ -701,6 +701,7 @@ INSPECTION_HINTS = {
 }
 
 INSPECTION_ISSUE_HINTS = {
+    "duplicate_exported_server_id_retained": "use_source_positions_for_repeated_message_ids",
     "json_size_limit_use_jsonl": "export_same_scope_as_jsonl",
     "declared_account_scope_conflict": "check_selected_scope_against_original_export",
     "exported_account_id_conflict": "separate_conflicting_account_sources",
@@ -711,6 +712,8 @@ INSPECTION_ISSUE_HINTS = {
 
 def _inspect_export(stream, extension, size, item, scope):
     issues = set()
+    seen_ids = set()
+    repeated_ids = 0
     if extension == ".jsonl":
         kind, metadata = _jsonl_header(stream)
         records = _jsonl_records(stream)
@@ -760,7 +763,13 @@ def _inspect_export(stream, extension, size, item, scope):
         if error:
             item["problem_record_count"] += 1
             issues.add(error)
+        else:
+            server_id = _identifier(message.get("server_id"))
+            if server_id:
+                repeated_ids += int(server_id in seen_ids)
+                seen_ids.add(server_id)
     item["issues"] = sorted(issues)
+    item["repeated_server_id_records"] = repeated_ids
     item["demo"] = metadata.get("demo") is True
     return owner, declared_scope
 
@@ -827,9 +836,11 @@ def inspect_inputs(inputs, scope=None, declared_kind=None):
             if declared_scope is not None:
                 declared_scopes.add(declared_scope)
             if "message_count" in item and not item["issues"]:
-                item["status"] = "review" if scope is None or item["demo"] else "ready"
-                if item["status"] == "review":
+                if scope is None or item["demo"]:
                     item["issues"].append("demo_export" if item["demo"] else "account_scope_unchecked")
+                if item["repeated_server_id_records"]:
+                    item["issues"].append("duplicate_exported_server_id_retained")
+                item["status"] = "review" if item["issues"] else "ready"
         except NormalizeError as exc:
             item["issues"].append(str(exc))
         except (OSError, ValueError, RuntimeError):

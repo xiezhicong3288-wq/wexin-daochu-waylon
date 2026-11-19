@@ -88,6 +88,19 @@ class NormalizeTests(unittest.TestCase):
         self.assertNotIn("never echo", json.dumps(result))
         self.assertEqual({path: path.read_bytes() for path in self.inputs.iterdir()}, before)
 
+    def test_inspect_reports_repeated_ids_without_echoing_them(self):
+        identifier = "900719925474099301"
+        export = document([message(server_id=identifier), message(server_id=int(identifier)),
+                           message(server_id="unique")])
+        export["metadata"]["demo"] = False
+        result = self.inspect([self.write(export)], "--account-scope", "synthetic")
+        self.assertEqual(result["exit_code"], 1)
+        row = result["inputs"][0]
+        self.assertEqual(row["message_count"], 3)
+        self.assertEqual(row["repeated_server_id_records"], 1)
+        self.assertEqual(row["issues"], ["duplicate_exported_server_id_retained"])
+        self.assertNotIn(identifier, json.dumps(result))
+
     def test_inspect_separates_declared_personal_copy_and_native_backup_clues(self):
         package = self.inputs / "ChatPackage"
         package.mkdir()
